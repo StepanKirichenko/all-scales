@@ -1,39 +1,38 @@
-import { For, Show } from "solid-js";
+import { For, Show, createContext, useContext, type ParentProps } from "solid-js";
 import styles from "./Piano.module.css";
 
 const NOTES = ["c", "d", "e", "f", "g", "a", "b"];
 const HAVE_SHARPS = ["c", "d", "f", "g", "a"];
 
-interface PianoProps {
+interface PianoContextState {
     highlightedNotes: string[];
     tonic: string;
     setTonic: (value: string) => void;
 }
 
-export function Piano(props: PianoProps) {
+const PianoContext = createContext<PianoContextState>();
+
+interface PianoContextProviderProps extends ParentProps, PianoContextState {}
+
+export function PianoContextProvider(props: PianoContextProviderProps) {
+    return <PianoContext.Provider value={props}>{props.children}</PianoContext.Provider>;
+}
+
+export function Piano() {
     return (
         <section class={styles.piano}>
             <Octave
-                tonic={props.tonic}
-                setTonic={props.setTonic}
                 number="1"
-                highlightedNotes={props.highlightedNotes}
             />
             <Octave
-                tonic={props.tonic}
-                setTonic={props.setTonic}
                 number="2"
-                highlightedNotes={props.highlightedNotes}
             />
         </section>
     );
 }
 
 interface OctaveProps {
-    tonic: string;
     number: string;
-    highlightedNotes: string[];
-    setTonic: (value: string) => void;
 }
 
 function Octave(props: OctaveProps) {
@@ -43,9 +42,6 @@ function Octave(props: OctaveProps) {
                 <WhiteKey
                     note={note}
                     octave={props.number}
-                    tonic={props.tonic}
-                    highlightedNotes={props.highlightedNotes}
-                    setTonic={props.setTonic}
                 />
             )}
         </For>
@@ -55,17 +51,15 @@ function Octave(props: OctaveProps) {
 interface WhiteKeyProps {
     octave: string;
     note: string;
-    tonic: string;
-    highlightedNotes: string[];
-    setTonic: (value: string) => void;
 }
 
 function WhiteKey(props: WhiteKeyProps) {
+    const context = useContext(PianoContext) as PianoContextState;
     const hasSharp = () => HAVE_SHARPS.includes(props.note);
     const isHighlighted = () =>
-        props.highlightedNotes.includes(props.note) ||
-        props.highlightedNotes.includes(props.note + props.octave);
-    const isTonic = () => props.note === props.tonic;
+        context.highlightedNotes.includes(props.note) ||
+        context.highlightedNotes.includes(props.note + props.octave);
+    const isTonic = () => props.note === context.tonic;
     return (
         <div class={styles.keyPair}>
             <button
@@ -74,15 +68,12 @@ function WhiteKey(props: WhiteKeyProps) {
                     [styles.highlighted]: isHighlighted(),
                     [styles.tonic]: isTonic(),
                 }}
-                onClick={() => props.setTonic(props.note)}
+                onClick={() => context.setTonic(props.note)}
             ></button>
             <Show when={hasSharp()}>
                 <BlackKey
-                    tonic={props.tonic}
-                    setTonic={props.setTonic}
                     baseNote={props.note}
                     octave={props.octave}
-                    highlightedNotes={props.highlightedNotes}
                 />
             </Show>
         </div>
@@ -92,17 +83,15 @@ function WhiteKey(props: WhiteKeyProps) {
 interface BlackKeyProps {
     baseNote: string;
     octave: string;
-    tonic: string;
-    highlightedNotes: string[];
-    setTonic: (value: string) => void;
 }
 
 function BlackKey(props: BlackKeyProps) {
+    const context = useContext(PianoContext) as PianoContextState;
     const note = () => props.baseNote + "#";
     const isHighlighted = () =>
-        props.highlightedNotes.includes(note()) ||
-        props.highlightedNotes.includes(note() + props.octave);
-    const isTonic = () => note() === props.tonic;
+        context.highlightedNotes.includes(note()) ||
+        context.highlightedNotes.includes(note() + props.octave);
+    const isTonic = () => note() === context.tonic;
     return (
         <button
             classList={{
@@ -110,7 +99,7 @@ function BlackKey(props: BlackKeyProps) {
                 [styles.highlighted]: isHighlighted(),
                 [styles.tonic]: isTonic(),
             }}
-            onClick={() => props.setTonic(props.baseNote + "#")}
+            onClick={() => context.setTonic(props.baseNote + "#")}
         ></button>
     );
 }

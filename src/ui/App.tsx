@@ -1,6 +1,7 @@
 import { createSignal } from "solid-js";
+import { Piano, PianoContextProvider } from "./components/Piano";
+
 import "./App.css";
-import { Piano } from "./components/Piano";
 
 const NOTES = [
     "c1",
@@ -30,14 +31,15 @@ const NOTES = [
 ];
 
 const SCALES = {
-    ionian: [2, 2, 1, 2, 2, 2, 1],
-    eolian: [2, 1, 2, 2, 1, 2, 2],
+    ionian: "2212221",
+    eolian: "2122122",
+    pentatonic: "22323",
 } as const;
 
 type Scale = keyof typeof SCALES;
 
-function buildScale(scale: "ionian" | "eolian", tonic: string) {
-    const steps = SCALES[scale];
+function buildScale(scale: Scale, tonic: string) {
+    const steps = SCALES[scale].split('').map((s) => Number(s));
     const result: string[] = [];
     const tonicIndex = NOTES.findIndex((note) => note.startsWith(tonic));
     let stepIndex = 0;
@@ -52,14 +54,13 @@ function buildScale(scale: "ionian" | "eolian", tonic: string) {
     while (true) {
         noteIndex -= steps[stepIndex];
         if (noteIndex < 0) break;
-        result.unshift(NOTES[noteIndex])
+        result.unshift(NOTES[noteIndex]);
         stepIndex = (stepIndex - 1 + steps.length) % steps.length;
     }
     return result;
 }
 
 function App() {
-    // const [notes, setNotes] = createSignal(NOTES);
     const [scale, setScale] = createSignal<Scale>("ionian");
     const [tonic, setTonic] = createSignal("c");
 
@@ -67,7 +68,9 @@ function App() {
 
     return (
         <div class="app">
-            <Piano tonic={tonic()} setTonic={setTonic} highlightedNotes={notes()} />
+            <PianoContextProvider highlightedNotes={notes()} tonic={tonic()} setTonic={setTonic}>
+                <Piano />
+            </PianoContextProvider>
             <select
                 onInput={(event) => {
                     setScale(event.target.value as Scale);
@@ -75,7 +78,8 @@ function App() {
                 value={scale()}
             >
                 <option value="ionian">Ionian</option>
-                <option value="eolian">eolian</option>
+                <option value="eolian">Eolian</option>
+                <option value="pentatonic">Pentatonic</option>
             </select>
         </div>
     );
