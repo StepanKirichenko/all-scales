@@ -29,6 +29,6 @@
     background-color: yellow;
 }
 
-.highlighted.tonic {
-    background-color: red;
+.tonic {
+    border: 3px solid red;
 }
