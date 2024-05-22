@@ -30,6 +30,22 @@ const NOTES = [
     "b2",
 ];
 
+const CHORDS = {
+    m: "34",
+    m6: "342",
+    m7: "343",
+
+    maj: "43",
+    "6": "432",
+    "7": "433",
+    maj7: "434",
+
+    sus2: "25",
+    sus4: "52",
+    aug: "44",
+    dim: "33",
+};
+
 const SCALES = {
     ionian: "2212221",
     eolian: "2122122",
@@ -37,9 +53,56 @@ const SCALES = {
 } as const;
 
 type Scale = keyof typeof SCALES;
+type Chord = keyof typeof CHORDS;
 
-function buildScale(scale: Scale, tonic: string) {
-    const steps = SCALES[scale].split('').map((s) => Number(s));
+function getPossibleChords(scale: string, fromIndex: number = 0): string[] {
+    let possibleChords = [];
+
+    for (const chord in CHORDS) {
+        let isFitting = true;
+        let intervals = CHORDS[chord as Chord];
+        let currentStepIndex = fromIndex;
+
+        for (let interval of intervals) {
+            let acc = 0;
+
+            while (acc < Number(interval)) {
+                acc += Number(scale[currentStepIndex]);
+                currentStepIndex = (currentStepIndex + 1) % scale.length;
+            }
+
+            if (acc > Number(interval)) {
+                isFitting = false;
+            }
+        }
+
+        if (isFitting) {
+            possibleChords.push(chord);
+        }
+    }
+
+    return possibleChords;
+}
+
+function getNoteInScale(scaleName: Scale, tonic: string, stepIndex: number) {
+    const scale = SCALES[scaleName];
+
+    if (stepIndex >= scale.length) {
+        return tonic;
+    }
+    
+    let tonicIndex = NOTES.indexOf(tonic + "1");
+    let offset = 0;
+
+    for (let i = 0; i < stepIndex; i++) {
+        offset += Number(scale[i]);
+    }
+
+    return NOTES[tonicIndex + offset].slice(0, -1);
+}
+
+function buildScale(scale: Scale, tonic: string): string[] {
+    const steps = SCALES[scale].split("").map((s) => Number(s));
     const result: string[] = [];
     const tonicIndex = NOTES.findIndex((note) => note.startsWith(tonic));
     let stepIndex = 0;
@@ -60,11 +123,28 @@ function buildScale(scale: Scale, tonic: string) {
     return result;
 }
 
+function buildChord(prima: string, chordName: Chord): string[] {
+    let chordNotes = [prima + "1"];
+    let currentIndex = NOTES.indexOf(chordNotes[0]);
+
+    for (let interval of CHORDS[chordName]) {
+        currentIndex += Number(interval);
+
+        if (currentIndex >= NOTES.length) break;
+
+        chordNotes.push(NOTES[currentIndex]);
+    }
+
+    return chordNotes;
+}
+
 function App() {
     const [scale, setScale] = createSignal<Scale>("ionian");
     const [tonic, setTonic] = createSignal("c");
 
-    const notes = () => buildScale(scale(), tonic());
+    // const notes = () => buildScale(scale(), tonic());
+    const rootNote = () => getNoteInScale(scale(), tonic(), 6);
+    const notes = () => buildChord(rootNote(), "maj7");
 
     return (
         <div class="app">
