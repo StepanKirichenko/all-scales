@@ -55,7 +55,7 @@ const SCALES = {
 type Scale = keyof typeof SCALES;
 type Chord = keyof typeof CHORDS;
 
-function getPossibleChords(scale: string, fromIndex: number = 0): string[] {
+export function getPossibleChords(scale: string, fromIndex: number = 0): string[] {
     let possibleChords = [];
 
     for (const chord in CHORDS) {
@@ -101,7 +101,7 @@ function getNoteInScale(scaleName: Scale, tonic: string, stepIndex: number) {
     return NOTES[tonicIndex + offset].slice(0, -1);
 }
 
-function buildScale(scale: Scale, tonic: string): string[] {
+export function buildScale(scale: Scale, tonic: string): string[] {
     const steps = SCALES[scale].split("").map((s) => Number(s));
     const result: string[] = [];
     const tonicIndex = NOTES.findIndex((note) => note.startsWith(tonic));
