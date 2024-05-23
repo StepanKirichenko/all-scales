@@ -1,7 +1,7 @@
-import { For, createSignal } from "solid-js";
+import { For, createEffect, createSignal, onCleanup } from "solid-js";
 import { Piano, PianoContextProvider } from "./components/Piano";
-
 import "./App.css";
+import { playNote, stopNote, activate } from "../services/sound";
 
 const NOTES = [
     "c1",
@@ -35,7 +35,7 @@ const CHORDS = {
     m6: "342",
     m7: "343",
 
-    maj: "43",
+    "": "43",
     "6": "432",
     "7": "433",
     maj7: "434",
@@ -98,7 +98,7 @@ export function getPossibleChords(scaleName: Scale, tonic: string): Set<string> 
             }
 
             if (isFitting) {
-                const ch = getNoteInScale(scaleName, tonic, fromIndex) + chord;
+                const ch = getNoteInScale(scaleName, tonic, fromIndex)[0] + chord;
                 possibleChords.add(ch);
             }
         }
@@ -107,11 +107,13 @@ export function getPossibleChords(scaleName: Scale, tonic: string): Set<string> 
     return possibleChords;
 }
 
-function getNoteInScale(scaleName: Scale, tonic: string, stepIndex: number) {
+function getNoteInScale(scaleName: Scale, tonic: string, stepIndex: number): [string, number] {
     const scale = SCALES[scaleName];
+    let octaveIndex = 1;
 
     if (stepIndex >= scale.length) {
-        return tonic;
+        stepIndex = stepIndex % scale.length;
+        octaveIndex = 2;
     }
 
     let tonicIndex = NOTES.indexOf(tonic + "1");
@@ -121,7 +123,10 @@ function getNoteInScale(scaleName: Scale, tonic: string, stepIndex: number) {
         offset += Number(scale[i]);
     }
 
-    return NOTES[tonicIndex + offset].slice(0, -1);
+    const noteIndex = tonicIndex + offset;
+    octaveIndex = noteIndex > 11 || octaveIndex == 2 ? 2 : 1;
+
+    return [NOTES[noteIndex].slice(0, -1), octaveIndex];
 }
 
 export function buildScale(scale: Scale, tonic: string): string[] {
@@ -161,15 +166,66 @@ function buildChord(prima: string, chordName: Chord): string[] {
     return chordNotes;
 }
 
+function keyCodeToNoteIndex(scaleName: Scale, tonic: string, keyCode: string): number {
+    const noteInScaleIndex = keyCodeToStepIndex(keyCode);
+    const [noteName, octaveIndex] = getNoteInScale(scaleName, tonic, noteInScaleIndex);
+    return NOTES.indexOf(noteName + octaveIndex);
+}
+
+const KEYCODES: Record<string, number> = {
+    Digit1: 0,
+    Digit2: 1,
+    Digit3: 2,
+    Digit4: 3,
+    Digit5: 4,
+    Digit6: 5,
+    Digit7: 6,
+    Digit8: 7,
+    Digit9: 8,
+    Digit0: 9,
+    Minus: 10,
+    Equal: 11,
+    Backspace: 12,
+};
+
+function keyCodeToStepIndex(keyCode: string): number {
+    return KEYCODES[keyCode];
+}
+
 function App() {
     const [scale, setScale] = createSignal<Scale>("ionian");
     const [tonic, setTonic] = createSignal("c");
 
+    const keydown = (e: KeyboardEvent) => {
+        activate();
+        if (!e.repeat && KEYCODES[e.code] !== undefined) {
+            const note = keyCodeToNoteIndex(scale(), tonic(), e.code);
+            playNote(note);
+        }
+    };
+
+    const keyup = (e: KeyboardEvent) => {
+        if (KEYCODES[e.code] !== undefined) {
+            const note = keyCodeToNoteIndex(scale(), tonic(), e.code);
+            stopNote(note);
+        }
+    };
+
+    createEffect(() => {
+        document.addEventListener("keydown", keydown);
+        document.addEventListener("keyup", keyup);
+
+        onCleanup(() => {
+            document.removeEventListener("keydown", keydown);
+            document.removeEventListener("keyup", keyup);
+        });
+    });
+
     const scaleNotes = () => buildScale(scale(), tonic());
     const [rootStep, setRootStep] = createSignal(0);
-    const [chordName, setChordName] = createSignal<Chord>("maj");
+    const [chordName, setChordName] = createSignal<Chord>("");
     const rootNote = () => getNoteInScale(scale(), tonic(), rootStep());
-    const chordNotes = () => buildChord(rootNote(), chordName());
+    const chordNotes = () => buildChord(rootNote()[0], chordName());
     const possibleChords = () => getPossibleChords(scale(), tonic());
     const scaleLength = () => SCALES[scale()].length;
 
@@ -204,7 +260,7 @@ function App() {
                                 <For each={getRange(0, scaleLength())}>
                                     {(step) => {
                                         const ch = () =>
-                                            `${getNoteInScale(scale(), tonic(), step)}${chord}`;
+                                            `${getNoteInScale(scale(), tonic(), step)[0]}${chord}`;
                                         return (
                                             <button
                                                 class="chord-button"
