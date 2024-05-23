@@ -25,10 +25,14 @@
     z-index: 1;
 }
 
-.highlighted  {
-    background-color: yellow;
+.inChord {
+    border: 3px solid #e33;
+}
+
+.inScale {
+    background-color: dodgerblue;
 }
 
 .tonic {
-    border: 3px solid red;
+    background-color: #35C;
 }

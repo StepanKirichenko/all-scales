@@ -1,4 +1,4 @@
-import { createSignal } from "solid-js";
+import { For, createSignal } from "solid-js";
 import { Piano, PianoContextProvider } from "./components/Piano";
 
 import "./App.css";
@@ -44,40 +44,63 @@ const CHORDS = {
     sus4: "52",
     aug: "44",
     dim: "33",
-};
+} as const;
+
+type ChordName = keyof typeof CHORDS;
+
+const CHORD_NAMES = Array.from(Object.keys(CHORDS)) as ChordName[];
 
 const SCALES = {
     ionian: "2212221",
     eolian: "2122122",
     pentatonic: "22323",
+    stepHalfstep: "12121212",
 } as const;
 
 type Scale = keyof typeof SCALES;
 type Chord = keyof typeof CHORDS;
 
-export function getPossibleChords(scale: string, fromIndex: number = 0): string[] {
-    let possibleChords = [];
+function getRange(from: number, to: number): number[] {
+    let result: number[] = [];
+    if (from > to) {
+        [from, to] = [to, from];
+    }
 
-    for (const chord in CHORDS) {
-        let isFitting = true;
-        let intervals = CHORDS[chord as Chord];
-        let currentStepIndex = fromIndex;
+    while (from < to) {
+        result.push(from);
+        from += 1;
+    }
 
-        for (let interval of intervals) {
-            let acc = 0;
+    return result;
+}
 
-            while (acc < Number(interval)) {
-                acc += Number(scale[currentStepIndex]);
-                currentStepIndex = (currentStepIndex + 1) % scale.length;
+export function getPossibleChords(scaleName: Scale, tonic: string): Set<string> {
+    const possibleChords = new Set<string>();
+
+    const scale = SCALES[scaleName];
+    for (let fromIndex = 0; fromIndex < scale.length; fromIndex += 1) {
+        for (const chord in CHORDS) {
+            let isFitting = true;
+            let intervals = CHORDS[chord as Chord];
+            let currentStepIndex = fromIndex;
+
+            for (let interval of intervals) {
+                let acc = 0;
+
+                while (acc < Number(interval)) {
+                    acc += Number(scale[currentStepIndex]);
+                    currentStepIndex = (currentStepIndex + 1) % scale.length;
+                }
+
+                if (acc > Number(interval)) {
+                    isFitting = false;
+                }
             }
 
-            if (acc > Number(interval)) {
-                isFitting = false;
+            if (isFitting) {
+                const ch = getNoteInScale(scaleName, tonic, fromIndex) + chord;
+                possibleChords.add(ch);
             }
-        }
-
-        if (isFitting) {
-            possibleChords.push(chord);
         }
     }
 
@@ -90,7 +113,7 @@ function getNoteInScale(scaleName: Scale, tonic: string, stepIndex: number) {
     if (stepIndex >= scale.length) {
         return tonic;
     }
-    
+
     let tonicIndex = NOTES.indexOf(tonic + "1");
     let offset = 0;
 
@@ -142,25 +165,65 @@ function App() {
     const [scale, setScale] = createSignal<Scale>("ionian");
     const [tonic, setTonic] = createSignal("c");
 
-    // const notes = () => buildScale(scale(), tonic());
-    const rootNote = () => getNoteInScale(scale(), tonic(), 6);
-    const notes = () => buildChord(rootNote(), "maj7");
+    const scaleNotes = () => buildScale(scale(), tonic());
+    const [rootStep, setRootStep] = createSignal(0);
+    const [chordName, setChordName] = createSignal<Chord>("maj");
+    const rootNote = () => getNoteInScale(scale(), tonic(), rootStep());
+    const chordNotes = () => buildChord(rootNote(), chordName());
+    const possibleChords = () => getPossibleChords(scale(), tonic());
+    const scaleLength = () => SCALES[scale()].length;
 
     return (
         <div class="app">
-            <PianoContextProvider highlightedNotes={notes()} tonic={tonic()} setTonic={setTonic}>
-                <Piano />
-            </PianoContextProvider>
-            <select
-                onInput={(event) => {
-                    setScale(event.target.value as Scale);
-                }}
-                value={scale()}
-            >
-                <option value="ionian">Ionian</option>
-                <option value="eolian">Eolian</option>
-                <option value="pentatonic">Pentatonic</option>
-            </select>
+            <div class="flex-column-centered">
+                <PianoContextProvider
+                    chordNotes={chordNotes()}
+                    scaleNotes={scaleNotes()}
+                    tonic={tonic()}
+                    setTonic={setTonic}
+                >
+                    <Piano />
+                </PianoContextProvider>
+                <div>
+                    <select
+                        onInput={(event) => {
+                            setScale(event.target.value as Scale);
+                        }}
+                        value={scale()}
+                    >
+                        <option value="ionian">Ionian</option>
+                        <option value="eolian">Eolian</option>
+                        <option value="pentatonic">Pentatonic</option>
+                        <option value="stepHalfstep">Step-halfstep</option>
+                    </select>
+                </div>
+                <section class={`chord-table rows-${scaleLength()}`}>
+                    <For each={CHORD_NAMES}>
+                        {(chord) => (
+                            <>
+                                <For each={getRange(0, scaleLength())}>
+                                    {(step) => {
+                                        const ch = () =>
+                                            `${getNoteInScale(scale(), tonic(), step)}${chord}`;
+                                        return (
+                                            <button
+                                                class="chord-button"
+                                                disabled={!possibleChords().has(ch())}
+                                                onClick={() => {
+                                                    setRootStep(step);
+                                                    setChordName(chord);
+                                                }}
+                                            >
+                                                {ch()}
+                                            </button>
+                                        );
+                                    }}
+                                </For>
+                            </>
+                        )}
+                    </For>
+                </section>
+            </div>
         </div>
     );
 }
