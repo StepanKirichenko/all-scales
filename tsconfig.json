@@ -19,7 +19,14 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* aliases */
+    "paths": {
+      "@lib/*": ["./src/lib/*"],
+      "@services/*": ["./src/services/*"],
+      "@ui/*": ["./src/ui/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

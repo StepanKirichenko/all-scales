@@ -1,54 +1,71 @@
-import { For, Show, createContext, useContext, type ParentProps } from "solid-js";
+import { Show, createContext, useContext, type ParentProps } from "solid-js";
+import { OCTAVE_LENGTH } from "@lib/constants";
 import styles from "./Piano.module.css";
 
-const NOTES = ["c", "d", "e", "f", "g", "a", "b"];
-const HAVE_SHARPS = ["c", "d", "f", "g", "a"];
-
-interface PianoContextState {
-    chordNotes: string[];
-    scaleNotes: string[];
-    tonic: string;
-    setTonic: (value: string) => void;
+interface PianoState {
+    chordNotes: Set<number>;
+    scaleNotes: Set<number>;
+    tonic: number;
+    onClick: (noteIndex: number) => void;
 }
 
-const PianoContext = createContext<PianoContextState>();
+const PianoContext = createContext<PianoState>();
 
-interface PianoContextProviderProps extends ParentProps, PianoContextState {}
+interface PianoContextProviderProps extends ParentProps, PianoState {}
 
-export function PianoContextProvider(props: PianoContextProviderProps) {
+function PianoContextProvider(props: PianoContextProviderProps) {
     return <PianoContext.Provider value={props}>{props.children}</PianoContext.Provider>;
 }
 
-export function Piano() {
+function PianoDisplay() {
     return (
         <section class={styles.piano}>
-            <Octave number="1" />
-            <Octave number="2" />
+            <Octave number={0} />
+            <Octave number={1} />
         </section>
     );
 }
 
+interface PianoProps extends PianoState {}
+
+export function Piano(props: PianoProps) {
+    return (
+        <PianoContextProvider {...props}>
+            <PianoDisplay />
+        </PianoContextProvider>
+    )
+}
+
 interface OctaveProps {
-    number: string;
+    number: number;
 }
 
 function Octave(props: OctaveProps) {
-    return <For each={NOTES}>{(note) => <WhiteKey note={note} octave={props.number} />}</For>;
+    const startIndex = () => props.number * OCTAVE_LENGTH;
+    return (
+        <>
+            <WhiteKey noteIndex={startIndex() + 0} sharpNoteIndex={startIndex() + 1} />
+            <WhiteKey noteIndex={startIndex() + 2} sharpNoteIndex={startIndex() + 3} />
+            <WhiteKey noteIndex={startIndex() + 4} />
+            <WhiteKey noteIndex={startIndex() + 5} sharpNoteIndex={startIndex() + 6} />
+            <WhiteKey noteIndex={startIndex() + 7} sharpNoteIndex={startIndex() + 8} />
+            <WhiteKey noteIndex={startIndex() + 9} sharpNoteIndex={startIndex() + 10} />
+            <WhiteKey noteIndex={startIndex() + 11} />
+        </>
+    )
 }
 
 interface WhiteKeyProps {
-    octave: string;
-    note: string;
+    noteIndex: number;
+    sharpNoteIndex?: number;
 }
 
 function WhiteKey(props: WhiteKeyProps) {
-    const context = useContext(PianoContext) as PianoContextState;
-    const hasSharp = () => HAVE_SHARPS.includes(props.note);
-    const isInChord = () =>
-        context.chordNotes.includes(props.note) ||
-        context.chordNotes.includes(props.note + props.octave);
-    const isInScale = () => context.scaleNotes.includes(props.note + props.octave);
-    const isTonic = () => props.note === context.tonic;
+    const context = useContext(PianoContext) as PianoState;
+    const hasSharp = () => props.sharpNoteIndex !== undefined;
+    const isInChord = () => context.chordNotes.has(props.noteIndex);
+    const isInScale = () => context.scaleNotes.has(props.noteIndex);
+    const isTonic = () => props.noteIndex % OCTAVE_LENGTH === context.tonic;
     return (
         <div class={styles.keyPair}>
             <button
@@ -58,27 +75,24 @@ function WhiteKey(props: WhiteKeyProps) {
                     [styles.inScale]: isInScale(),
                     [styles.tonic]: isTonic(),
                 }}
-                onClick={() => context.setTonic(props.note)}
+                onClick={() => context.onClick(props.noteIndex)}
             ></button>
             <Show when={hasSharp()}>
-                <BlackKey baseNote={props.note} octave={props.octave} />
+                <BlackKey noteIndex={props.sharpNoteIndex ?? 0} />
             </Show>
         </div>
     );
 }
 
 interface BlackKeyProps {
-    baseNote: string;
-    octave: string;
+    noteIndex: number;
 }
 
 function BlackKey(props: BlackKeyProps) {
-    const context = useContext(PianoContext) as PianoContextState;
-    const note = () => props.baseNote + "#";
-    const isInChord = () =>
-        context.chordNotes.includes(note()) || context.chordNotes.includes(note() + props.octave);
-    const isInScale = () => context.scaleNotes.includes(note() + props.octave);
-    const isTonic = () => note() === context.tonic;
+    const context = useContext(PianoContext) as PianoState;
+    const isInChord = () => context.chordNotes.has(props.noteIndex);
+    const isInScale = () => context.scaleNotes.has(props.noteIndex);
+    const isTonic = () => props.noteIndex % OCTAVE_LENGTH === context.tonic;
     return (
         <button
             classList={{
@@ -87,7 +101,7 @@ function BlackKey(props: BlackKeyProps) {
                 [styles.inScale]: isInScale(),
                 [styles.tonic]: isTonic(),
             }}
-            onClick={() => context.setTonic(props.baseNote + "#")}
+            onClick={() => context.onClick(props.noteIndex)}
         ></button>
     );
 }

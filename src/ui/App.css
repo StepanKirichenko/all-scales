@@ -20,35 +20,5 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.chord-table {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-}
-
-.chord-table.rows-5 {
-    grid-template-columns: repeat(5, 1fr);
-}
-
-.chord-table.rows-6 {
-    grid-template-columns: repeat(6, 1fr);
-}
-
-.chord-table.rows-7 {
-    grid-template-columns: repeat(7, 1fr);
-}
-
-.chord-table.rows-8 {
-    grid-template-columns: repeat(8, 1fr);
-}
-
-.chord-button {
-    border: 1px solid black;
-    border-radius: 0;
-    padding: 0.5rem;
-}
-
-.chord-button::first-letter {
-    text-transform: uppercase;
+    gap: 1rem;
 }
