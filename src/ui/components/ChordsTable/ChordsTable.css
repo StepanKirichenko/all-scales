@@ -1,0 +1,39 @@
+.chord-table {
+    box-sizing: border-box;
+
+    display: grid;
+    row-gap: 0.25rem;
+    column-gap: 0.25rem;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.chord-table.rows-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.chord-table.rows-6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.chord-table.rows-7 {
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.chord-table.rows-8 {
+    grid-template-columns: repeat(8, 1fr);
+}
+
+.chord-button {
+    box-sizing: border-box;
+    border: 1px solid black;
+    border-radius: 0;
+    padding: 0.5rem;
+}
+
+.chord-button.active {
+    background-color: #F88;
+}
+
+.chord-button::first-letter {
+    text-transform: uppercase;
+}
