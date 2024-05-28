@@ -1,38 +1,7 @@
-import { Scale } from "@lib/constants";
-import { getNoteInScale } from "@lib/music";
-import { createEffect, on, onCleanup } from "solid-js";
+import { ReactiveSet } from "@solid-primitives/set";
+import { createEffect } from "solid-js";
 
-const KEYCODES: Record<string, number> = {
-    Digit1: 0,
-    Digit2: 1,
-    Digit3: 2,
-    Digit4: 3,
-    Digit5: 4,
-    Digit6: 5,
-    Digit7: 6,
-    Digit8: 7,
-    Digit9: 8,
-    Digit0: 9,
-    Minus: 10,
-    Equal: 11,
-    Backspace: 12,
-};
-
-function keyCodeToStepIndex(keyCode: string): number {
-    return KEYCODES[keyCode];
-}
-
-function keyCodeToNoteIndex(scaleName: Scale, tonic: number, keyCode: string): number {
-    const noteInScaleIndex = keyCodeToStepIndex(keyCode);
-    const noteIndex = getNoteInScale(scaleName, tonic, noteInScaleIndex);
-
-    return noteIndex;
-}
-
-type ScaleGetter = () => Scale;
-type TonicGetter = () => number;
-
-export function usePlayKeyboardSound(scale: ScaleGetter, tonic: TonicGetter) {
+export function usePlayKeyboardSound(pressedKeys: ReactiveSet<number>) {
     const oscList: OscillatorNode[] = [];
     const gainList: GainNode[] = [];
     const audioContext = new AudioContext();
@@ -62,6 +31,7 @@ export function usePlayKeyboardSound(scale: ScaleGetter, tonic: TonicGetter) {
     }
 
     function playNote(noteIndex: number) {
+        activate();
         gainList[noteIndex].gain.setTargetAtTime(0.5, 0, 0.05);
     }
 
@@ -69,11 +39,15 @@ export function usePlayKeyboardSound(scale: ScaleGetter, tonic: TonicGetter) {
         gainList[noteIndex].gain.setTargetAtTime(0, 0, 0.05);
     }
 
-    function stopAllNotes() {
-        for (const gain of gainList) {
-            gain.gain.setTargetAtTime(0, 0, 0.05);
+    createEffect(() => {
+        for (let i = 0; i < gainList.length; i += 1) {
+            if (pressedKeys.has(i)) {
+                playNote(i);
+            } else {
+                stopNote(i);
+            }
         }
-    }
+    })
 
     let isContextResumed = false;
 
@@ -86,32 +60,5 @@ export function usePlayKeyboardSound(scale: ScaleGetter, tonic: TonicGetter) {
         }
     }
 
-    const keydown = (e: KeyboardEvent) => {
-        activate();
-        if (!e.repeat && KEYCODES[e.code] !== undefined) {
-            const note = keyCodeToNoteIndex(scale(), tonic(), e.code);
-            playNote(note);
-        }
-    };
-
-    const keyup = (e: KeyboardEvent) => {
-        if (KEYCODES[e.code] !== undefined) {
-            const note = keyCodeToNoteIndex(scale(), tonic(), e.code);
-            stopNote(note);
-        }
-    };
-
-    createEffect(
-        on([scale, tonic], () => {
-            stopAllNotes();
-        }),
-    );
-
-    document.addEventListener("keydown", keydown);
-    document.addEventListener("keyup", keyup);
-
-    onCleanup(() => {
-        document.removeEventListener("keydown", keydown);
-        document.removeEventListener("keyup", keyup);
-    });
+    return {playNote, stopNote};
 }

@@ -27,25 +27,52 @@ export const NOTES = [
     "b2",
 ];
 
-export const CHORDS = {
-    m: "34",
-    m6: "342",
-    m7: "343",
+export type Chord = {
+    name: string;
+    intervals: string;
+};
 
-    "": "43",
-    "6": "432",
-    "7": "433",
-    maj7: "434",
+export type ChordGroup = {
+    name: string;
+    chords: Chord[];
+}
 
-    sus2: "25",
-    sus4: "52",
-    aug: "44",
-    dim: "33",
-} as const;
+export const CHORDS: ChordGroup[] = [
+    {
+        name: "major",
+        chords: [
+            { name: "", intervals: "43" },
+            { name: "6", intervals: "432" },
+            { name: "7", intervals: "433" },
+            { name: "maj7", intervals: "434" },
+        ],
+    },
+    {
+        name: "minor",
+        chords: [
+            { name: "m", intervals: "34" },
+            { name: "m6", intervals: "342" },
+            { name: "m7", intervals: "343" },
+        ],
+    },
+    {
+        name: "other",
+        chords: [
+            { name: "sus2", intervals: "25" },
+            { name: "sus4", intervals: "52" },
+            { name: "aug", intervals: "44" },
+            { name: "dim", intervals: "33" },
+        ],
+    },
+] as const;
 
-export type ChordName = keyof typeof CHORDS;
+export const CHORD_INTERVALS: Record<string, string> = {};
 
-export const CHORD_NAMES = Array.from(Object.keys(CHORDS)) as ChordName[];
+for (const chordGroup of CHORDS) {
+    for (const chord of chordGroup.chords) {
+        CHORD_INTERVALS[chord.name] = chord.intervals;
+    }
+}
 
 export const SCALES = {
     ionian: {
@@ -58,4 +85,3 @@ export const SCALES = {
 } as const;
 
 export type Scale = keyof typeof SCALES;
-export type Chord = keyof typeof CHORDS;

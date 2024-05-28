@@ -37,3 +37,8 @@
 .chord-button::first-letter {
     text-transform: uppercase;
 }
+
+.break {
+    grid-column: 1 / -1;
+    height: 1rem;
+}

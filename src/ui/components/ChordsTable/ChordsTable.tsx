@@ -1,17 +1,17 @@
-import { CHORD_NAMES, Chord, OCTAVE_LENGTH, SCALES, Scale } from "@lib/constants";
+import { CHORDS, OCTAVE_LENGTH, SCALES, Scale } from "@lib/constants";
 import { getNoteBaseName, getNoteInScale } from "@lib/music";
 import { getRange } from "@lib/utils";
 import { For } from "solid-js";
 import "./ChordsTable.css";
 
 interface ChordsTableProps {
-    scale: Scale,
-    tonic: number,
-    possibleChords: Array<Set<Chord>>;
+    scale: Scale;
+    tonic: number;
+    possibleChords: Array<Set<string>>;
     rootNote: number;
-    chordName: Chord;
+    chordName: string;
     setRootNote: (note: number) => void;
-    setChordName: (chord: Chord) => void;
+    setChordName: (chord: string) => void;
 }
 
 export function ChordsTable(props: ChordsTableProps) {
@@ -19,31 +19,46 @@ export function ChordsTable(props: ChordsTableProps) {
 
     return (
         <section class={`chord-table rows-${scaleLength()}`}>
-            <For each={CHORD_NAMES}>
-                {(chord) => (
+            <For each={CHORDS}>
+                {(group) => (
                     <>
-                        <For each={getRange(0, scaleLength())}>
-                            {(step) => {
-                                const note = () =>
-                                    getNoteInScale(props.scale, props.tonic, step) % OCTAVE_LENGTH;
-                                const noteName = () => getNoteBaseName(note());
-                                const chordDisplayName = () => noteName() + chord;
-                                const isActive = () => note() === props.rootNote && chord === props.chordName;
+                        <For each={group.chords}>
+                            {(chord) => (
+                                <>
+                                    <For each={getRange(0, scaleLength())}>
+                                        {(step) => {
+                                            const note = () =>
+                                                getNoteInScale(props.scale, props.tonic, step) %
+                                                OCTAVE_LENGTH;
+                                            const noteName = () => getNoteBaseName(note());
+                                            const chordDisplayName = () => noteName() + chord.name;
+                                            const isActive = () =>
+                                                note() === props.rootNote &&
+                                                chord.name === props.chordName;
 
-                                return (
-                                    <button
-                                        classList={{"chord-button": true, active: isActive()}}
-                                        disabled={!props.possibleChords[step].has(chord)}
-                                        onClick={() => {
-                                            props.setRootNote(note());
-                                            props.setChordName(chord);
+                                            return (
+                                                <button
+                                                    classList={{
+                                                        "chord-button": true,
+                                                        active: isActive(),
+                                                    }}
+                                                    disabled={
+                                                        !props.possibleChords[step].has(chord.name)
+                                                    }
+                                                    onClick={() => {
+                                                        props.setRootNote(note());
+                                                        props.setChordName(chord.name);
+                                                    }}
+                                                >
+                                                    {chordDisplayName()}
+                                                </button>
+                                            );
                                         }}
-                                    >
-                                        {chordDisplayName()}
-                                    </button>
-                                );
-                            }}
+                                    </For>
+                                </>
+                            )}
                         </For>
+                        <div class="break"></div>
                     </>
                 )}
             </For>

@@ -1,20 +1,20 @@
-import { CHORDS, Chord, NOTES, OCTAVE_LENGTH, SCALES, Scale } from "@lib/constants";
+import { CHORD_INTERVALS, NOTES, OCTAVE_LENGTH, SCALES, Scale } from "@lib/constants";
 
 /**
  * Get all the chords possible in the current scale
  * @param scaleName
  * @returns Array of sets of chords that can be built from each of the scale's steps
  */
-export function getPossibleChords(scaleName: Scale): Array<Set<Chord>> {
-    const possibleChords: Array<Set<Chord>> = [];
+export function getPossibleChords(scaleName: Scale): Array<Set<string>> {
+    const possibleChords: Array<Set<string>> = [];
 
     const scale = SCALES[scaleName].intervals;
     for (let fromIndex = 0; fromIndex < scale.length; fromIndex += 1) {
-        const currentStepChords = new Set<Chord>();
+        const currentStepChords = new Set<string>();
 
-        for (const chord in CHORDS) {
+        for (const chord in CHORD_INTERVALS) {
             let isFitting = true;
-            let intervals = CHORDS[chord as Chord];
+            let intervals = CHORD_INTERVALS[chord];
             let currentStepIndex = fromIndex;
 
             for (let interval of intervals) {
@@ -31,7 +31,7 @@ export function getPossibleChords(scaleName: Scale): Array<Set<Chord>> {
             }
 
             if (isFitting) {
-                currentStepChords.add(chord as Chord);
+                currentStepChords.add(chord);
             }
         }
 
@@ -63,13 +63,13 @@ export function getNoteBaseName(note: number): string {
  * @param tonic The index of the tonic in the NOTES array
  * @returns A set of indices of notes included in the scale
  */
-export function buildScale(scale: Scale, tonic: number): Set<number> {
+export function buildScale(scale: Scale, tonic: number): Map<number, number> {
     const steps = SCALES[scale].intervals.split("").map((s) => Number(s));
-    const result = new Set<number>();
+    const result = new Map<number, number>();
     let stepIndex = 0;
     let noteIndex = tonic;
     while (noteIndex < NOTES.length) {
-        result.add(noteIndex);
+        result.set(noteIndex, stepIndex);
         noteIndex += steps[stepIndex];
         stepIndex = (stepIndex + 1) % steps.length;
     }
@@ -78,7 +78,7 @@ export function buildScale(scale: Scale, tonic: number): Set<number> {
     while (true) {
         noteIndex -= steps[stepIndex];
         if (noteIndex < 0) break;
-        result.add(noteIndex);
+        result.set(noteIndex, stepIndex);
         stepIndex = (stepIndex - 1 + steps.length) % steps.length;
     }
     return result;
@@ -90,12 +90,12 @@ export function buildScale(scale: Scale, tonic: number): Set<number> {
  * @param prima The index of prima in the NOTES array
  * @returns A set of indices of notes included in the chord
  */
-export function buildChord(chordName: Chord, prima: number): Set<number> {
+export function buildChord(chordName: string, prima: number): Set<number> {
     const chordNotes = new Set<number>();
     chordNotes.add(prima);
     let currentIndex = prima;
 
-    for (let interval of CHORDS[chordName]) {
+    for (let interval of CHORD_INTERVALS[chordName]) {
         currentIndex += Number(interval);
         if (currentIndex >= NOTES.length) break;
 
