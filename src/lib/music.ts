@@ -63,13 +63,13 @@ export function getNoteBaseName(note: number): string {
  * @param tonic The index of the tonic in the NOTES array
  * @returns A set of indices of notes included in the scale
  */
-export function buildScale(scale: Scale, tonic: number): Set<number> {
+export function buildScale(scale: Scale, tonic: number): Map<number, number> {
     const steps = SCALES[scale].intervals.split("").map((s) => Number(s));
-    const result = new Set<number>();
+    const result = new Map<number, number>();
     let stepIndex = 0;
     let noteIndex = tonic;
     while (noteIndex < NOTES.length) {
-        result.add(noteIndex);
+        result.set(noteIndex, stepIndex);
         noteIndex += steps[stepIndex];
         stepIndex = (stepIndex + 1) % steps.length;
     }
@@ -78,7 +78,7 @@ export function buildScale(scale: Scale, tonic: number): Set<number> {
     while (true) {
         noteIndex -= steps[stepIndex];
         if (noteIndex < 0) break;
-        result.add(noteIndex);
+        result.set(noteIndex, stepIndex);
         stepIndex = (stepIndex - 1 + steps.length) % steps.length;
     }
     return result;

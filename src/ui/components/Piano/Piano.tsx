@@ -5,7 +5,7 @@ import { ReactiveSet } from "@solid-primitives/set";
 
 interface PianoState {
     chordNotes: Set<number>;
-    scaleNotes: Set<number>;
+    scaleNotes: Map<number, number>;
     tonic: number;
     keysPressed: ReactiveSet<number>;
     onClick: (noteIndex: number) => void;
@@ -69,6 +69,7 @@ function WhiteKey(props: WhiteKeyProps) {
     const hasSharp = () => props.sharpNoteIndex !== undefined;
     const isInChord = () => context.chordNotes.has(props.noteIndex);
     const isInScale = () => context.scaleNotes.has(props.noteIndex);
+    const stepIndex = () => context.scaleNotes.get(props.noteIndex);
     const isTonic = () => props.noteIndex % OCTAVE_LENGTH === context.tonic;
     const isPressed = () => context.keysPressed.has(props.noteIndex);
     return (
@@ -85,6 +86,9 @@ function WhiteKey(props: WhiteKeyProps) {
                 onPointerDown={() => context.onPointerDown(props.noteIndex)}
                 onPointerUp={() => context.onPointerUp(props.noteIndex)}
             ></button>
+            <span class={styles.stepIndex}>
+                {stepIndex() !== undefined ? stepIndex()! + 1 : null}
+            </span>
             <Show when={hasSharp()}>
                 <BlackKey noteIndex={props.sharpNoteIndex ?? 0} />
             </Show>
@@ -100,6 +104,7 @@ function BlackKey(props: BlackKeyProps) {
     const context = useContext(PianoContext) as PianoState;
     const isInChord = () => context.chordNotes.has(props.noteIndex);
     const isInScale = () => context.scaleNotes.has(props.noteIndex);
+    const stepIndex = () => context.scaleNotes.get(props.noteIndex);
     const isTonic = () => props.noteIndex % OCTAVE_LENGTH === context.tonic;
     const isPressed = () => context.keysPressed.has(props.noteIndex);
     return (
@@ -114,6 +119,10 @@ function BlackKey(props: BlackKeyProps) {
             onClick={() => context.onClick(props.noteIndex)}
             onPointerDown={() => context.onPointerDown(props.noteIndex)}
             onPointerUp={() => context.onPointerUp(props.noteIndex)}
-        ></button>
+        >
+            <span class={styles.stepIndex}>
+                {stepIndex() !== undefined ? stepIndex()! + 1 : null}
+            </span>
+        </button>
     );
 }
