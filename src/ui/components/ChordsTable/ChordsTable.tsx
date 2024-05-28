@@ -1,4 +1,4 @@
-import { CHORDS, CHORD_INTERVALS, OCTAVE_LENGTH, SCALES, Scale } from "@lib/constants";
+import { CHORDS, OCTAVE_LENGTH, SCALES, Scale } from "@lib/constants";
 import { getNoteBaseName, getNoteInScale } from "@lib/music";
 import { getRange } from "@lib/utils";
 import { For } from "solid-js";
