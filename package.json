@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@solid-primitives/set": "^0.4.11",
     "solid-js": "^1.8.15"
   },
   "devDependencies": {
