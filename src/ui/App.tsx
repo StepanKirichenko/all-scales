@@ -4,7 +4,7 @@ import { buildChord, buildScale, getPossibleChords } from "@lib/music";
 import { ChordsTable } from "@ui/components/ChordsTable";
 import { Piano } from "@ui/components/Piano";
 import { ScaleSelect } from "@ui/components/ScaleSelect";
-import { createSignal } from "solid-js";
+import { createEffect, createSignal } from "solid-js";
 import "./App.css";
 import { useKeyboardInput } from "@services/keyboard";
 
@@ -35,18 +35,28 @@ function App() {
         if (mode() === "play") {
             pressedKeys.add(note);
         }
-    }
+    };
 
     const onPianoKeyPointerUp = (note: number) => {
         if (mode() === "play") {
             pressedKeys.delete(note);
         }
-    }
+    };
 
     const onModeToggle = () => {
         setMode((prevMode) => (prevMode === "choose-tonic" ? "play" : "choose-tonic"));
     };
 
+    createEffect(() => {
+        setRootNote(tonic());
+        const possibleTonicChords = possibleChords()[0];
+        const chord = possibleTonicChords.has("")
+            ? ""
+            : possibleTonicChords.has("m")
+              ? "m"
+              : possibleTonicChords.values().next().value;
+        setChordName(chord);
+    });
 
     return (
         <div class="app">
