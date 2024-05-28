@@ -80,6 +80,7 @@ export const SCALES = {
         intervals: "2212221",
     },
     eolian: { name: "Eolian", intervals: "2122122" },
+    locrian: { name: "Locrian", intervals: "1221222"},
     pentatonic: { name: "Pentatonic", intervals: "22323" },
     stepHalfstep: { name: "Step-halfstep", intervals: "12121212" },
 } as const;
