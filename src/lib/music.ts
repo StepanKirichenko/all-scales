@@ -1,5 +1,5 @@
 import { CHORD_INTERVALS, NOTES, OCTAVE_LENGTH } from "@lib/constants";
-import { getIntervalsByMode, getModeSteps, Scale } from "./scales";
+import { getIntervalsByModus, getModusSteps, Scale } from "./scales";
 
 /**
  * Get all the chords possible in the current scale
@@ -9,7 +9,7 @@ import { getIntervalsByMode, getModeSteps, Scale } from "./scales";
 export function getPossibleChords(scaleName: Scale, modusName: string): Array<Set<string>> {
     const possibleChords: Array<Set<string>> = [];
 
-    const scale = getIntervalsByMode(scaleName, modusName);
+    const scale = getIntervalsByModus(scaleName, modusName);
     for (let fromIndex = 0; fromIndex < scale.length; fromIndex += 1) {
         const currentStepChords = new Set<string>();
 
@@ -43,7 +43,7 @@ export function getPossibleChords(scaleName: Scale, modusName: string): Array<Se
 }
 
 export function getNoteInScale(scale: Scale, modus: string, tonic: number, step: number): number {
-    const intervals = getIntervalsByMode(scale, modus);
+    const intervals = getIntervalsByModus(scale, modus);
 
     let offset = 0;
 
@@ -65,7 +65,7 @@ export function getNoteBaseName(note: number): string {
  * @returns A set of indices of notes included in the scale
  */
 export function buildScale(scale: Scale, modus: string, tonic: number): Map<number, number> {
-    const steps = getModeSteps(scale, modus);
+    const steps = getModusSteps(scale, modus);
     const result = new Map<number, number>();
     let stepIndex = 0;
     let noteIndex = tonic;

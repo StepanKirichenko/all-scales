@@ -74,25 +74,6 @@ for (const chordGroup of CHORDS) {
     }
 }
 
-const SYMMETRIC = {
-    stepHalfstep: { name: "Step-halfstep", intervals: "12121212" },
-    halfstepStep: { name: "Halfstep-step", intervals: "21212121" },
-    wholeTone: { name: "Whole tone", intervals: "222222" },
-};
-
-const BLUES = {
-
-};
-
-const PENTATONIC = {
-    major: { name: "Pentatonic major", intervals: "22323" },
-    minor: { name: "Pentatonic minor", intervals: "32232" },
-    japanese: { name: "Japanese pentatonic", intervals: "14214" },
-    egyptian: { name: "Egyptian pentatonic", intervals: "23232" },
-    bluesMinor: { name: "Blues minor pentatonic", intervals: "32322" },
-    bluesMajor: { name: "Blues major pentatonic", intervals: "23223" },
-};
-
 const HARMONIC = {
     major: { name: "Harmonic major", intervals: "2212131" },
     minor: { name: "Harmonic minor", intervals: "2122131" },

@@ -1,4 +1,4 @@
-import { SCALES, Scale, getAllModusByScale } from "@lib/scales";
+import { Modus, SCALES, Scale, getAllModusByScale, getModusByName } from "@lib/scales";
 import { For } from "solid-js";
 
 interface ScaleSelectProps {
@@ -16,7 +16,7 @@ export function ScaleSelect(props: ScaleSelectProps) {
         >
             <For each={Object.keys(SCALES)}>
                 {(scale) => (
-                    <option value={scale}>{scale}</option>
+                    <option value={scale}>{scale[0].toUpperCase() + scale.slice(1)}</option>
                 )}
             </For>
         </select>
@@ -39,7 +39,7 @@ export function ModusSelect(props: ModusSelectProps) {
         >
             <For each={getAllModusByScale(props.scale)}>
                 {(modus) => (
-                    <option value={modus}>{modus}</option>
+                    <option value={modus}>{getModusByName(props.scale, modus).name}</option>
                 )}
             </For>
         </select>

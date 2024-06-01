@@ -9,21 +9,91 @@ const DIATONIC = {
 };
 
 const JAZZ = {
-    minor: { name: "Jazz minor", intervals: "2122221" },
-    "dorian-b2": { name: "Dorian b2", intervals: "1222212" },
-    lydianAugmented: { name: "Lydian augmented", intervals: "2222121" },
-    lydianDominant: { name: "Lydian dominant", intervals: "2221212" },
-    aeolianDominant: { name: "Aeolian dominant", intervals: "2212122" },
-    halfDiminished: { name: "Half-diminished", intervals: "2121222" },
-    superLocrian: { name: "Super Locrian", intervals: "1212222" },
+    mode_2122221: { name: "Ascending melodic minor", intervals: "2122221" },
+    mode_1222212: { name: "Dorian b2", intervals: "1222212" },
+    mode_2222121: { name: "Lydian augmented", intervals: "2222121" },
+    mode_2221212: { name: "Lydian dominant", intervals: "2221212" },
+    mode_2212122: { name: "Aeolian dominant (Melodic major)", intervals: "2212122" },
+    mode_2121222: { name: "Half-diminished", intervals: "2121222" },
+    mode_1212222: { name: "Super Locrian", intervals: "1212222" },
 }
 
-const scale_22323 = {
-    mode_22323: { name: "22323", intervals: "22323" } as Modus,
-    mode_23232: { name: "23232", intervals: "23232" } as Modus,
-    mode_32322: { name: "32322", intervals: "32322" } as Modus,
-    mode_23223: { name: "23223", intervals: "23223" } as Modus,
-    mode_32232: { name: "32232", intervals: "32232" } as Modus,
+const BLUES = {
+    mode_321132: { name: "Minor", intervals: "321132" } as Modus,
+    mode_211323: { name: "Major", intervals: "211323" } as Modus,
+    mode_113232: { name: "Egyptian?", intervals: "113232" } as Modus,
+    mode_132321: { name: "The blues note", intervals: "132321" } as Modus,
+    mode_323211: { name: "Some minor", intervals: "323211" } as Modus,
+    mode_232113: { name: "Some major", intervals: "232113" } as Modus,
+};
+
+const PENTATONIC = {
+    mode_22323: { name: "Major", intervals: "22323" } as Modus,
+    mode_23232: { name: "Egyptian", intervals: "23232" } as Modus,
+    mode_32322: { name: "Blues minor pentatonic", intervals: "32322" } as Modus,
+    mode_23223: { name: "Blues major pentatonic", intervals: "23223" } as Modus,
+    mode_32232: { name: "Minor", intervals: "32232" } as Modus,
+};
+
+const OCTATONIC = {
+    mode_12121212: { name: "Half-step / Whole step", intervals: "12121212" },
+    mode_21212121: { name: "Whole step / Half-step", intervals: "21212121" },
+}
+
+const WHOLETONE = {    
+    mode_222222: { name: "Whole-tone", intervals: "222222" },
+}
+
+const DOUBLE_HARMONIC = {
+    mode_1131213: { name: "Locrian bb3 bb7", intervals: "1131213" } as Modus,
+    mode_1312131: { name: "Major (Flamenko)", intervals: "1312131" } as Modus,
+    mode_3121311: { name: "Lydian ♯2 ♯6", intervals: "3121311" } as Modus,
+    mode_1213113: { name: "Ultraphrygian", intervals: "1213113" } as Modus,
+    mode_2131131: { name: "Hungarian Gipsy minor", intervals: "2131131" } as Modus,
+    mode_1311312: { name: "Oriental", intervals: "1311312" } as Modus,
+    mode_3113121: { name: "Ionian ♯2 ♯5", intervals: "3113121" } as Modus,
+};
+
+const HARMONIC_MINOR = {
+    mode_1212213: { name: "1212213", intervals: "1212213" } as Modus,
+    mode_2122131: { name: "Minor", intervals: "2122131" } as Modus,
+    mode_1221312: { name: "1221312", intervals: "1221312" } as Modus,
+    mode_2213121: { name: "2213121", intervals: "2213121" } as Modus,
+    mode_2131212: { name: "Ukranian", intervals: "2131212" } as Modus,
+    mode_1312122: { name: "Spanish (Phrygian major)", intervals: "1312122" } as Modus,
+    mode_3121221: { name: "3121221", intervals: "3121221" } as Modus,
+};
+
+const HARMONIC_MAJOR = {
+    mode_1213122: { name: "1213122", intervals: "1213122" } as Modus,
+    mode_2131221: { name: "2131221", intervals: "2131221" } as Modus,
+    mode_1312212: { name: "1312212", intervals: "1312212" } as Modus,
+    mode_3122121: { name: "3122121", intervals: "3122121" } as Modus,
+    mode_1221213: { name: "1221213", intervals: "1221213" } as Modus,
+    mode_2212131: { name: "Major", intervals: "2212131" } as Modus,
+    mode_2121312: { name: "2121312", intervals: "2121312" } as Modus,
+};
+
+const JAPANESE_PENTATONIC = {    
+    mode_42141: { name: "Hirajoshi", intervals: "42141" },
+    mode_21414: { name: "Box 2", intervals: "21414" },
+    mode_14142: { name: "Iwato", intervals: "14142" },
+    mode_41421: { name: "Box 4", intervals: "41421" },
+    mode_14214: { name: "Miyako-bushi (In scale)", intervals: "14214" },
+}
+
+const INSEN_PENTATONIC = {
+    mode_14232: { name: "Box 0", intervals: "14232" },
+    mode_42321: { name: "Box 1", intervals: "42321" },
+    mode_23214: { name: "Box 2", intervals: "23214" },
+    mode_32142: { name: "Box 3", intervals: "32142" },
+    mode_21423: { name: "Box 4", intervals: "21423" },
+}
+
+const TRITONE = {
+    mode_321321: { name: "Third", intervals: "321321" } as Modus,
+    mode_213213: { name: "Tone", intervals: "213213" } as Modus,
+    mode_132132: { name: "Semitone", intervals: "132132" } as Modus,
 };
 
 const scale_112323 = {
@@ -44,15 +114,6 @@ const scale_113223 = {
     mode_311322: { name: "311322", intervals: "311322" } as Modus,
 };
 
-const scale_113232 = {
-    mode_113232: { name: "113232", intervals: "113232" } as Modus,
-    mode_132321: { name: "132321", intervals: "132321" } as Modus,
-    mode_323211: { name: "323211", intervals: "323211" } as Modus,
-    mode_232113: { name: "232113", intervals: "232113" } as Modus,
-    mode_321132: { name: "321132", intervals: "321132" } as Modus,
-    mode_211323: { name: "211323", intervals: "211323" } as Modus,
-};
-
 const scale_121323 = {
     mode_121323: { name: "121323", intervals: "121323" } as Modus,
     mode_213231: { name: "213231", intervals: "213231" } as Modus,
@@ -65,7 +126,7 @@ const scale_121323 = {
 const scale_122223 = {
     mode_122223: { name: "122223", intervals: "122223" } as Modus,
     mode_222231: { name: "222231", intervals: "222231" } as Modus,
-    mode_222312: { name: "222312", intervals: "222312" } as Modus,
+    mode_222312: { name: "Prometheus (mystic)", intervals: "222312" } as Modus,
     mode_223122: { name: "223122", intervals: "223122" } as Modus,
     mode_231222: { name: "231222", intervals: "231222" } as Modus,
     mode_312222: { name: "312222", intervals: "312222" } as Modus,
@@ -131,9 +192,9 @@ const scale_123222 = {
     mode_212322: { name: "212322", intervals: "212322" } as Modus,
 };
 
-const scale_131313 = {
-    mode_131313: { name: "131313", intervals: "131313" } as Modus,
-    mode_313131: { name: "313131", intervals: "313131" } as Modus,
+const AUGMENTED = {
+    mode_131313: { name: "Small", intervals: "131313" } as Modus,
+    mode_313131: { name: "Big", intervals: "313131" } as Modus,
 };
 
 const scale_131322 = {
@@ -143,12 +204,6 @@ const scale_131322 = {
     mode_322131: { name: "322131", intervals: "322131" } as Modus,
     mode_221313: { name: "221313", intervals: "221313" } as Modus,
     mode_213132: { name: "213132", intervals: "213132" } as Modus,
-};
-
-const scale_132132 = {
-    mode_132132: { name: "132132", intervals: "132132" } as Modus,
-    mode_321321: { name: "321321", intervals: "321321" } as Modus,
-    mode_213213: { name: "213213", intervals: "213213" } as Modus,
 };
 
 const scale_132222 = {
@@ -225,7 +280,7 @@ const scale_1122213 = {
     mode_1222131: { name: "1222131", intervals: "1222131" } as Modus,
     mode_2221311: { name: "2221311", intervals: "2221311" } as Modus,
     mode_2213112: { name: "2213112", intervals: "2213112" } as Modus,
-    mode_2131122: { name: "2131122", intervals: "2131122" } as Modus,
+    mode_2131122: { name: "Gipsy", intervals: "2131122" } as Modus,
     mode_1311222: { name: "1311222", intervals: "1311222" } as Modus,
     mode_3112221: { name: "3112221", intervals: "3112221" } as Modus,
 };
@@ -258,16 +313,6 @@ const scale_1123212 = {
     mode_2121123: { name: "2121123", intervals: "2121123" } as Modus,
     mode_1211232: { name: "1211232", intervals: "1211232" } as Modus,
     mode_2112321: { name: "2112321", intervals: "2112321" } as Modus,
-};
-
-const scale_1131213 = {
-    mode_1131213: { name: "1131213", intervals: "1131213" } as Modus,
-    mode_1312131: { name: "1312131", intervals: "1312131" } as Modus,
-    mode_3121311: { name: "3121311", intervals: "3121311" } as Modus,
-    mode_1213113: { name: "1213113", intervals: "1213113" } as Modus,
-    mode_2131131: { name: "2131131", intervals: "2131131" } as Modus,
-    mode_1311312: { name: "1311312", intervals: "1311312" } as Modus,
-    mode_3113121: { name: "3113121", intervals: "3113121" } as Modus,
 };
 
 const scale_1131222 = {
@@ -317,7 +362,7 @@ const scale_1212123 = {
     mode_2123121: { name: "2123121", intervals: "2123121" } as Modus,
     mode_1231212: { name: "1231212", intervals: "1231212" } as Modus,
     mode_2312121: { name: "2312121", intervals: "2312121" } as Modus,
-    mode_3121212: { name: "3121212", intervals: "3121212" } as Modus,
+    mode_3121212: { name: "Hungarian", intervals: "3121212" } as Modus,
 };
 
 const scale_1212132 = {
@@ -330,33 +375,23 @@ const scale_1212132 = {
     mode_2121213: { name: "2121213", intervals: "2121213" } as Modus,
 };
 
-const scale_1212213 = {
-    mode_1212213: { name: "1212213", intervals: "1212213" } as Modus,
-    mode_2122131: { name: "2122131", intervals: "2122131" } as Modus,
-    mode_1221312: { name: "1221312", intervals: "1221312" } as Modus,
-    mode_2213121: { name: "2213121", intervals: "2213121" } as Modus,
-    mode_2131212: { name: "2131212", intervals: "2131212" } as Modus,
-    mode_1312122: { name: "1312122", intervals: "1312122" } as Modus,
-    mode_3121221: { name: "3121221", intervals: "3121221" } as Modus,
-};
-
-const scale_1213122 = {
-    mode_1213122: { name: "1213122", intervals: "1213122" } as Modus,
-    mode_2131221: { name: "2131221", intervals: "2131221" } as Modus,
-    mode_1312212: { name: "1312212", intervals: "1312212" } as Modus,
-    mode_3122121: { name: "3122121", intervals: "3122121" } as Modus,
-    mode_1221213: { name: "1221213", intervals: "1221213" } as Modus,
-    mode_2212131: { name: "2212131", intervals: "2212131" } as Modus,
-    mode_2121312: { name: "2121312", intervals: "2121312" } as Modus,
-};
-
 export const SCALES = {
     diatonic: DIATONIC, 
+    pentatonic: PENTATONIC,
+    blues: BLUES,
     jazz: JAZZ,
-    scale_22323: scale_22323,
+    octatonic: OCTATONIC,
+    wholetone: WHOLETONE,
+    "Japanese pentatonic": JAPANESE_PENTATONIC,
+    "Insen pentatonic": INSEN_PENTATONIC,
+    "harmonic minor": HARMONIC_MINOR,
+    "harmonic major": HARMONIC_MAJOR,
+    "Double harmonic": DOUBLE_HARMONIC,
+    augmented: AUGMENTED,
+    tritone: TRITONE,
+
     scale_112323: scale_112323,
     scale_113223: scale_113223,
-    scale_113232: scale_113232,
     scale_121323: scale_121323,
     scale_122223: scale_122223,
     scale_122232: scale_122232,
@@ -366,9 +401,7 @@ export const SCALES = {
     scale_123132: scale_123132,
     scale_123213: scale_123213,
     scale_123222: scale_123222,
-    scale_131313: scale_131313,
     scale_131322: scale_131322,
-    scale_132132: scale_132132,
     scale_132222: scale_132222,
     scale_1121223: scale_1121223,
     scale_1121232: scale_1121232,
@@ -380,33 +413,34 @@ export const SCALES = {
     scale_1122312: scale_1122312,
     scale_1123122: scale_1123122,
     scale_1123212: scale_1123212,
-    scale_1131213: scale_1131213,
     scale_1131222: scale_1131222,
     scale_1131312: scale_1131312,
     scale_1132122: scale_1132122,
     scale_1132212: scale_1132212,
     scale_1212123: scale_1212123,
     scale_1212132: scale_1212132,
-    scale_1212213: scale_1212213,
-    scale_1213122: scale_1213122,
 };
 
 export type Scale = keyof typeof SCALES;
 export type Modes = (typeof SCALES)[Scale];
 export type Modus = { name: string; intervals: string };
 
-export function getIntervalsByMode(scale: Scale, modeName: string): string {
+export function getIntervalsByModus(scale: Scale, modeName: string): string {
+    return getModusByName(scale, modeName).intervals;
+}
+
+export function getModusByName(scale: Scale, modeName: string): Modus {
     let modes = SCALES[scale as Scale] as Modes;
 
     if (Object.keys(modes).includes(modeName)) {
-        return Object.values(modes)[Object.keys(modes).indexOf(modeName)].intervals;
+        return Object.values(modes)[Object.keys(modes).indexOf(modeName)];
     }
     
-    return Object.values(modes)[0].intervals;
+    return Object.values(modes)[0];
 }
 
-export function getModeSteps(scale: Scale, modeName: string): number[] {
-    let intervals = getIntervalsByMode(scale, modeName);
+export function getModusSteps(scale: Scale, modeName: string): number[] {
+    let intervals = getIntervalsByModus(scale, modeName);
     return intervals.split("").map((s) => Number(s));
 }
 

@@ -13,8 +13,8 @@ type Mode = "choose-tonic" | "play";
 
 function App() {
     const [mode, setMode] = createSignal<Mode>("choose-tonic");
-    const [scale, setScale] = createSignal<Scale>('scale_22323');
-    const [modus, setModus] = createSignal<string>('mode_32232');
+    const [scale, setScale] = createSignal<Scale>('diatonic');
+    const [modus, setModus] = createSignal<string>('ionian');
     const [tonic, setTonic] = createSignal(0);
     const [rootNote, setRootNote] = createSignal(0);
     const [chordName, setChordName] = createSignal<string>("");

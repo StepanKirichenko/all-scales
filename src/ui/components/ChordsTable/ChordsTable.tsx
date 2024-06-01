@@ -3,7 +3,7 @@ import { getNoteBaseName, getNoteInScale } from "@lib/music";
 import { getRange } from "@lib/utils";
 import { For } from "solid-js";
 import "./ChordsTable.css";
-import { getIntervalsByMode, Scale } from "@lib/scales";
+import { getIntervalsByModus, Scale } from "@lib/scales";
 
 interface ChordsTableProps {
     scale: Scale;
@@ -17,7 +17,7 @@ interface ChordsTableProps {
 }
 
 export function ChordsTable(props: ChordsTableProps) {
-    const scaleLength = () => getIntervalsByMode(props.scale, props.modus).length;
+    const scaleLength = () => getIntervalsByModus(props.scale, props.modus).length;
 
     return (
         <section class={`chord-table rows-${scaleLength()}`}>
