@@ -1,27 +1,29 @@
 import { usePlayKeyboardSound } from "@services/sound";
-import { OCTAVE_LENGTH, Scale } from "@lib/constants";
+import { OCTAVE_LENGTH } from "@lib/constants";
 import { buildChord, buildScale, getPossibleChords } from "@lib/music";
 import { ChordsTable } from "@ui/components/ChordsTable";
 import { Piano } from "@ui/components/Piano";
-import { ScaleSelect } from "@ui/components/ScaleSelect";
+import { ModusSelect, ScaleSelect } from "@ui/components/ScaleSelect";
 import { createEffect, createSignal } from "solid-js";
 import "./App.css";
 import { useKeyboardInput } from "@services/keyboard";
+import { Modus, Scale } from "@lib/scales";
 
 type Mode = "choose-tonic" | "play";
 
 function App() {
     const [mode, setMode] = createSignal<Mode>("choose-tonic");
-    const [scale, setScale] = createSignal<Scale>("ionian");
+    const [scale, setScale] = createSignal<Scale>('scale_22323');
+    const [modus, setModus] = createSignal<string>('mode_32232');
     const [tonic, setTonic] = createSignal(0);
     const [rootNote, setRootNote] = createSignal(0);
     const [chordName, setChordName] = createSignal<string>("");
 
-    const scaleNotes = () => buildScale(scale(), tonic());
+    const scaleNotes = () => buildScale(scale(), modus(), tonic());
     const chordNotes = () => buildChord(chordName(), rootNote());
-    const possibleChords = () => getPossibleChords(scale());
+    const possibleChords = () => getPossibleChords(scale(), modus());
 
-    const pressedKeys = useKeyboardInput(scale, tonic);
+    const pressedKeys = useKeyboardInput(scale, modus, tonic);
 
     usePlayKeyboardSound(pressedKeys);
 
@@ -75,10 +77,12 @@ function App() {
                 />
                 <div>
                     <ScaleSelect scale={scale()} setScale={setScale} />
+                    <ModusSelect scale={scale()} modus={modus()} setModus={setModus} />
                 </div>
                 <ChordsTable
                     scale={scale()}
                     tonic={tonic()}
+                    modus={modus()}
                     rootNote={rootNote()}
                     chordName={chordName()}
                     possibleChords={possibleChords()}

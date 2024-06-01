@@ -1,4 +1,4 @@
-import { SCALES, Scale } from "@lib/constants";
+import { SCALES, Scale, getAllModusByScale } from "@lib/scales";
 import { For } from "solid-js";
 
 interface ScaleSelectProps {
@@ -14,9 +14,32 @@ export function ScaleSelect(props: ScaleSelectProps) {
             }}
             value={props.scale}
         >
-            <For each={Object.entries(SCALES)}>
-                {([key, scale]) => (
-                    <option value={key}>{scale.name}</option>
+            <For each={Object.keys(SCALES)}>
+                {(scale) => (
+                    <option value={scale}>{scale}</option>
+                )}
+            </For>
+        </select>
+    );
+}
+
+interface ModusSelectProps {
+    scale: Scale;
+    modus: string;
+    setModus: (modus: string) => void;
+}
+
+export function ModusSelect(props: ModusSelectProps) {
+    return (
+        <select
+            onInput={(event) => {
+                props.setModus(event.target.value as string);
+            }}
+            value={props.modus}
+        >
+            <For each={getAllModusByScale(props.scale)}>
+                {(modus) => (
+                    <option value={modus}>{modus}</option>
                 )}
             </For>
         </select>

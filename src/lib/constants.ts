@@ -35,7 +35,7 @@ export type Chord = {
 export type ChordGroup = {
     name: string;
     chords: Chord[];
-}
+};
 
 export const CHORDS: ChordGroup[] = [
     {
@@ -74,15 +74,27 @@ for (const chordGroup of CHORDS) {
     }
 }
 
-export const SCALES = {
-    ionian: {
-        name: "Ionian",
-        intervals: "2212221",
-    },
-    eolian: { name: "Eolian", intervals: "2122122" },
-    locrian: { name: "Locrian", intervals: "1221222"},
-    pentatonic: { name: "Pentatonic", intervals: "22323" },
+const SYMMETRIC = {
     stepHalfstep: { name: "Step-halfstep", intervals: "12121212" },
-} as const;
+    halfstepStep: { name: "Halfstep-step", intervals: "21212121" },
+    wholeTone: { name: "Whole tone", intervals: "222222" },
+};
 
-export type Scale = keyof typeof SCALES;
+const BLUES = {
+
+};
+
+const PENTATONIC = {
+    major: { name: "Pentatonic major", intervals: "22323" },
+    minor: { name: "Pentatonic minor", intervals: "32232" },
+    japanese: { name: "Japanese pentatonic", intervals: "14214" },
+    egyptian: { name: "Egyptian pentatonic", intervals: "23232" },
+    bluesMinor: { name: "Blues minor pentatonic", intervals: "32322" },
+    bluesMajor: { name: "Blues major pentatonic", intervals: "23223" },
+};
+
+const HARMONIC = {
+    major: { name: "Harmonic major", intervals: "2212131" },
+    minor: { name: "Harmonic minor", intervals: "2122131" },
+};
+

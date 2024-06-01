@@ -1,5 +1,6 @@
-import { Scale } from "@lib/constants";
+
 import { getNoteInScale } from "@lib/music";
+import { Scale } from "@lib/scales";
 import { ReactiveSet } from "@solid-primitives/set";
 import { createEffect, on, onCleanup } from "solid-js";
 
@@ -23,29 +24,35 @@ function keyCodeToStepIndex(keyCode: string): number {
     return KEYCODES[keyCode];
 }
 
-function keyCodeToNoteIndex(scaleName: Scale, tonic: number, keyCode: string): number {
+function keyCodeToNoteIndex(
+    scaleName: Scale,
+    modusName: string,
+    tonic: number,
+    keyCode: string,
+): number {
     const noteInScaleIndex = keyCodeToStepIndex(keyCode);
-    const noteIndex = getNoteInScale(scaleName, tonic, noteInScaleIndex);
+    const noteIndex = getNoteInScale(scaleName, modusName, tonic, noteInScaleIndex);
 
     return noteIndex;
 }
 
 type ScaleGetter = () => Scale;
 type TonicGetter = () => number;
+type ModusGetter = () => string;
 
-export function useKeyboardInput(scale: ScaleGetter, tonic: TonicGetter) {
+export function useKeyboardInput(scale: ScaleGetter, modus: ModusGetter, tonic: TonicGetter) {
     const pressedKeys = new ReactiveSet<number>();
 
     const keydown = (e: KeyboardEvent) => {
         if (!e.repeat && KEYCODES[e.code] !== undefined) {
-            const note = keyCodeToNoteIndex(scale(), tonic(), e.code);
+            const note = keyCodeToNoteIndex(scale(), modus(), tonic(), e.code);
             pressedKeys.add(note);
         }
     };
 
     const keyup = (e: KeyboardEvent) => {
         if (KEYCODES[e.code] !== undefined) {
-            const note = keyCodeToNoteIndex(scale(), tonic(), e.code);
+            const note = keyCodeToNoteIndex(scale(), modus(), tonic(), e.code);
             pressedKeys.delete(note);
         }
     };
