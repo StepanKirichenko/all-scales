@@ -45,3 +45,21 @@ export function ModusSelect(props: ModusSelectProps) {
         </select>
     );
 }
+
+export function RandomizeButton(props: ModusSelectProps & ScaleSelectProps) {
+    return (
+        <button
+            onClick={() => {
+                let scales = Object.keys(SCALES);
+                let scale = scales[Math.floor(Math.random() * scales.length)];
+                let moduses = Object.keys(SCALES[scale as Scale]);
+                let modus = moduses[Math.floor(Math.random() * moduses.length)];
+
+                props.setScale(scale as Scale);
+                props.setModus(modus);
+            }}
+        >
+            Randomize
+        </button>
+    );
+}

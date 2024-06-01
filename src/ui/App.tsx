@@ -3,7 +3,7 @@ import { OCTAVE_LENGTH } from "@lib/constants";
 import { buildChord, buildScale, getPossibleChords } from "@lib/music";
 import { ChordsTable } from "@ui/components/ChordsTable";
 import { Piano } from "@ui/components/Piano";
-import { ModusSelect, ScaleSelect } from "@ui/components/ScaleSelect";
+import { ModusSelect, RandomizeButton, ScaleSelect } from "@ui/components/ScaleSelect";
 import { createEffect, createSignal } from "solid-js";
 import "./App.css";
 import { useKeyboardInput } from "@services/keyboard";
@@ -78,6 +78,7 @@ function App() {
                 <div>
                     <ScaleSelect scale={scale()} setScale={setScale} />
                     <ModusSelect scale={scale()} modus={modus()} setModus={setModus} />
+                    <RandomizeButton scale={scale()} setScale={setScale} modus={modus()} setModus={setModus} />
                 </div>
                 <ChordsTable
                     scale={scale()}
