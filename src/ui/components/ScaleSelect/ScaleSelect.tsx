@@ -1,9 +1,10 @@
-import { Modus, SCALES, Scale, getAllModusByScale, getModusByName } from "@lib/scales";
+import { SCALES, Scale, getAllModusByScale, getModusByName } from "@lib/scales";
 import { For } from "solid-js";
 
 interface ScaleSelectProps {
     scale: Scale;
     setScale: (scale: Scale) => void;
+    setModus: (modus: string) => void;
 }
 
 export function ScaleSelect(props: ScaleSelectProps) {
@@ -11,6 +12,7 @@ export function ScaleSelect(props: ScaleSelectProps) {
         <select
             onInput={(event) => {
                 props.setScale(event.target.value as Scale);
+                props.setModus(getAllModusByScale(event.target.value as Scale)[0]);
             }}
             value={props.scale}
         >

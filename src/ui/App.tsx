@@ -5,16 +5,17 @@ import { ChordsTable } from "@ui/components/ChordsTable";
 import { Piano } from "@ui/components/Piano";
 import { ModusSelect, RandomizeButton, ScaleSelect } from "@ui/components/ScaleSelect";
 import { createEffect, createSignal } from "solid-js";
-import "./App.css";
 import { useKeyboardInput } from "@services/keyboard";
-import { Modus, Scale } from "@lib/scales";
+import { Scale } from "@lib/scales";
+import { FavoriteSelect } from "./components/FavoriteSelect";
+import "./App.css";
 
 type Mode = "choose-tonic" | "play";
 
 function App() {
     const [mode, setMode] = createSignal<Mode>("choose-tonic");
-    const [scale, setScale] = createSignal<Scale>('diatonic');
-    const [modus, setModus] = createSignal<string>('ionian');
+    const [scale, setScale] = createSignal<Scale>("diatonic");
+    const [modus, setModus] = createSignal<string>("ionian");
     const [tonic, setTonic] = createSignal(0);
     const [rootNote, setRootNote] = createSignal(0);
     const [chordName, setChordName] = createSignal<string>("");
@@ -60,6 +61,11 @@ function App() {
         setChordName(chord);
     });
 
+    const [favoriteList, setFavoriteList] = createSignal<string[]>([]);
+
+    const currentScaleAndModeId = () => scale() + ";" + modus();
+    const currentScaleAndModeInFavorite = () => favoriteList().includes(currentScaleAndModeId());
+
     return (
         <div class="app">
             <div class="flex-column-centered">
@@ -76,9 +82,34 @@ function App() {
                     onPointerUp={onPianoKeyPointerUp}
                 />
                 <div>
-                    <ScaleSelect scale={scale()} setScale={setScale} />
+                    <FavoriteSelect
+                        favoriteList={favoriteList()}
+                        setScale={setScale}
+                        setModus={setModus}
+                    />
+                    <ScaleSelect scale={scale()} setScale={setScale} setModus={setModus} />
                     <ModusSelect scale={scale()} modus={modus()} setModus={setModus} />
-                    <RandomizeButton scale={scale()} setScale={setScale} modus={modus()} setModus={setModus} />
+                    <RandomizeButton
+                        scale={scale()}
+                        setScale={setScale}
+                        modus={modus()}
+                        setModus={setModus}
+                    />
+                    <button
+                        onClick={() => {
+                            if (currentScaleAndModeInFavorite()) {
+                                setFavoriteList((prev) =>
+                                    prev.filter((id) => id !== currentScaleAndModeId()),
+                                );
+                            } else {
+                                setFavoriteList((prev) => [...prev, currentScaleAndModeId()]);
+                            }
+                        }}
+                    >
+                        {favoriteList().includes(currentScaleAndModeId())
+                            ? "Remove from favorite"
+                            : "Add to favorite"}
+                    </button>
                 </div>
                 <ChordsTable
                     scale={scale()}
