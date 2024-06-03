@@ -74,7 +74,7 @@ for (const chordGroup of CHORDS) {
     }
 }
 
-const HARMONIC = {
+export const HARMONIC = {
     major: { name: "Harmonic major", intervals: "2212131" },
     minor: { name: "Harmonic minor", intervals: "2122131" },
 };
