@@ -2,11 +2,11 @@ import { Show, createContext, useContext, type ParentProps } from "solid-js";
 import { OCTAVE_LENGTH } from "@lib/constants";
 import styles from "./Piano.module.css";
 import { ReactiveSet } from "@solid-primitives/set";
+import { tonic } from "@ui/global-state";
 
 interface PianoState {
     chordNotes: Set<number>;
     scaleNotes: Map<number, number>;
-    tonic: number;
     keysPressed: ReactiveSet<number>;
     onClick: (noteIndex: number) => void;
     onPointerDown: (noteIndex: number) => void;
@@ -70,7 +70,7 @@ function WhiteKey(props: WhiteKeyProps) {
     const isInChord = () => context.chordNotes.has(props.noteIndex);
     const isInScale = () => context.scaleNotes.has(props.noteIndex);
     const stepIndex = () => context.scaleNotes.get(props.noteIndex);
-    const isTonic = () => props.noteIndex % OCTAVE_LENGTH === context.tonic;
+    const isTonic = () => props.noteIndex % OCTAVE_LENGTH === tonic();
     const isPressed = () => context.keysPressed.has(props.noteIndex);
     return (
         <div class={styles.keyPair}>
@@ -105,7 +105,7 @@ function BlackKey(props: BlackKeyProps) {
     const isInChord = () => context.chordNotes.has(props.noteIndex);
     const isInScale = () => context.scaleNotes.has(props.noteIndex);
     const stepIndex = () => context.scaleNotes.get(props.noteIndex);
-    const isTonic = () => props.noteIndex % OCTAVE_LENGTH === context.tonic;
+    const isTonic = () => props.noteIndex % OCTAVE_LENGTH === tonic();
     const isPressed = () => context.keysPressed.has(props.noteIndex);
     return (
         <button
