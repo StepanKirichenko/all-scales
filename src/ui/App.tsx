@@ -10,6 +10,7 @@ import { Scale } from "@lib/scales";
 import { FavoriteSelect } from "./components/FavoriteSelect";
 import { FavoriteButton } from "./components/FavoriteButton";
 import "./App.css";
+import { Die } from "./icons/Die";
 
 type Mode = "choose-tonic" | "play";
 
@@ -75,8 +76,37 @@ function App() {
         }
     };
 
+    const isModeInFavorites = (mode: string) => favoriteList().includes(scale() + ";" + mode);
+
+    const toggleModeFavorite = (mode: string) => {
+        const scaleAndMode = scale() + ";" + mode;
+        if (isModeInFavorites(mode)) {
+            setFavoriteList((prev) => prev.filter((id) => id !== scaleAndMode));
+        } else {
+            setFavoriteList((prev) => [...prev, scaleAndMode]);
+        }
+    };
+
     return (
         <div class="app">
+            <section class="scale-mode-select-section">
+                <FavoriteSelect
+                    favoriteList={favoriteList()}
+                    setScale={setScale}
+                    setModus={setModus}
+                />
+                <ScaleSelect scale={scale()} setScale={setScale} setModus={setModus} />
+                <ModusSelect
+                    scale={scale()}
+                    modus={modus()}
+                    setModus={setModus}
+                    isModusFavorite={isModeInFavorites}
+                    toggleModusFavorite={toggleModeFavorite}
+                />
+                <div class="buttons-row">
+                    <RandomizeButton setScale={setScale} setModus={setModus} />
+                </div>
+            </section>
             <div class="flex-column-centered">
                 <button onClick={onModeToggle}>
                     {mode() === "choose-tonic" ? "Play" : "Stop playing"}
@@ -90,25 +120,6 @@ function App() {
                     onPointerDown={onPianoKeyPointerDown}
                     onPointerUp={onPianoKeyPointerUp}
                 />
-                <div class="scale-select-row">
-                    <FavoriteSelect
-                        favoriteList={favoriteList()}
-                        setScale={setScale}
-                        setModus={setModus}
-                    />
-                    <ScaleSelect scale={scale()} setScale={setScale} setModus={setModus} />
-                    <ModusSelect scale={scale()} modus={modus()} setModus={setModus} />
-                    <RandomizeButton
-                        scale={scale()}
-                        setScale={setScale}
-                        modus={modus()}
-                        setModus={setModus}
-                    />
-                    <FavoriteButton
-                        isFavorite={currentScaleAndModeInFavorite()}
-                        onClick={toggleFavorite}
-                    />
-                </div>
                 <ChordsTable
                     scale={scale()}
                     tonic={tonic()}

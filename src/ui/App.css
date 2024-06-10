@@ -10,10 +10,20 @@ body {
 }
 
 .app {
-    display: grid;
-    place-content: center;
+    display: flex;
     width: 100dvw;
     min-height: 100dvh;
+}
+
+.scale-mode-select-section {
+    --width: 150px;
+    min-width: var(--width);
+    max-width: var(--width);
+    width: var(--width);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.5rem;
+    gap: 0.5rem;
 }
 
 .flex-column-centered {
@@ -27,4 +37,69 @@ body {
     display: flex;
     align-items: center;
     gap: 0.25rem;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: none;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+
+    color: white;
+}
+
+.buttons-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modus-select {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    border: 2px solid white;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.modus-select__modus {
+    border-radius: 8px;
+    padding: 4px 8px;
+    color: white;
+    display: flex;
+}
+
+.modus-select__modus:hover {
+    background-color: #fff3;
+}
+
+.modus-select__modus.modus-select__modus--current {
+    background-color: white;
+    color: black;
+}
+
+.modus-select__button {
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: start;
+    flex-grow: 1;
+}
+
+.modus-select__favorite {
+    background: none;
+    border: none;
+    color: inherit;
+    width: 16px;
+    height: 16px;
+    display: none;
+    cursor: pointer;
+}
+
+.modus-select__favorite--active,
+.modus-select__modus:hover .modus-select__favorite {
+    display: block;
 }

@@ -1,4 +1,7 @@
 import { SCALES, Scale, getAllModusByScale, getModusByName } from "@lib/scales";
+import { Die } from "@ui/icons/Die";
+import { Star } from "@ui/icons/Star";
+import { StarFilled } from "@ui/icons/StarFilled";
 import { For } from "solid-js";
 
 interface ScaleSelectProps {
@@ -29,28 +32,49 @@ interface ModusSelectProps {
     scale: Scale;
     modus: string;
     setModus: (modus: string) => void;
+    isModusFavorite: (modus: string) => boolean;
+    toggleModusFavorite: (modus: string) => void;
 }
 
 export function ModusSelect(props: ModusSelectProps) {
     return (
-        <select
-            onInput={(event) => {
-                props.setModus(event.target.value as string);
-            }}
-            value={props.modus}
-        >
+        <div class="modus-select">
             <For each={getAllModusByScale(props.scale)}>
                 {(modus) => (
-                    <option value={modus}>{getModusByName(props.scale, modus).name}</option>
+                    <div
+                        classList={{
+                            "modus-select__modus": true,
+                            "modus-select__modus--current": props.modus === modus,
+                        }}
+                    >
+                        <button class="modus-select__button" onClick={() => props.setModus(modus)}>
+                            {getModusByName(props.scale, modus).name}
+                        </button>
+                        <button
+                            classList={{
+                                "modus-select__favorite": true,
+                                "modus-select__favorite--active": props.isModusFavorite(modus),
+                            }}
+                            onClick={() => props.toggleModusFavorite(modus)}
+                        >
+                            {props.isModusFavorite(modus) ? <StarFilled /> : <Star />}
+                        </button>
+                    </div>
                 )}
             </For>
-        </select>
+        </div>
     );
 }
 
-export function RandomizeButton(props: ModusSelectProps & ScaleSelectProps) {
+interface RandomizeButtonProps {
+    setScale: (scale: Scale) => void;
+    setModus: (modus: string) => void;
+}
+
+export function RandomizeButton(props: RandomizeButtonProps) {
     return (
         <button
+            class="icon-button"
             onClick={() => {
                 let scales = Object.keys(SCALES);
                 let scale = scales[Math.floor(Math.random() * scales.length)];
@@ -61,7 +85,7 @@ export function RandomizeButton(props: ModusSelectProps & ScaleSelectProps) {
                 props.setModus(modus);
             }}
         >
-            Randomize
+            <Die />
         </button>
     );
 }
