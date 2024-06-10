@@ -25,13 +25,12 @@ function keyCodeToStepIndex(keyCode: string): number {
 }
 
 function keyCodeToNoteIndex(
-    scaleName: Scale,
     modusName: string,
     tonic: number,
     keyCode: string,
 ): number {
     const noteInScaleIndex = keyCodeToStepIndex(keyCode);
-    const noteIndex = getNoteInScale(scaleName, modusName, tonic, noteInScaleIndex);
+    const noteIndex = getNoteInScale(modusName, tonic, noteInScaleIndex);
 
     return noteIndex;
 }
@@ -45,14 +44,14 @@ export function useKeyboardInput(scale: ScaleGetter, modus: ModusGetter, tonic: 
 
     const keydown = (e: KeyboardEvent) => {
         if (!e.repeat && KEYCODES[e.code] !== undefined) {
-            const note = keyCodeToNoteIndex(scale(), modus(), tonic(), e.code);
+            const note = keyCodeToNoteIndex(modus(), tonic(), e.code);
             pressedKeys.add(note);
         }
     };
 
     const keyup = (e: KeyboardEvent) => {
         if (KEYCODES[e.code] !== undefined) {
-            const note = keyCodeToNoteIndex(scale(), modus(), tonic(), e.code);
+            const note = keyCodeToNoteIndex(modus(), tonic(), e.code);
             pressedKeys.delete(note);
         }
     };

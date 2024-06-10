@@ -1,4 +1,4 @@
-import { Scale, getModusByName } from "@lib/scales";
+import { MODES, SCALES, Scale } from "@lib/scales";
 import { For } from "solid-js";
 
 interface FavoriteSelectProps {
@@ -33,9 +33,10 @@ export function FavoriteSelect(props: FavoriteSelectProps) {
                             onClick={() => {
                                 props.setScale(scale as Scale);
                                 props.setModus(modus);
+                                console.log(scale, modus);
                             }}
                         >
-                            {scale + " " + getModusByName(scale as Scale, modus).name}
+                            {SCALES[scale] + " " + MODES[modus]}
                         </option>
                     );
                 }}

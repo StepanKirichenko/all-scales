@@ -1,3 +1,31 @@
+import { getRange } from "./utils";
+
+export function getScalesByStepCount(stepCount: number): string[] {
+    return Object.keys(SCALES).filter((scale) => scale.length === stepCount);
+}
+
+export const SCALES: Record<string, string> = {
+    "2122122": "Diatonic",
+    "321132": "Blues",
+};
+
+export const MODES: Record<string, string> = {
+    "112323": "112323",
+    "2122122": "Aeolian",
+    "1221222": "Locrian",
+    "2212221": "Ionian",
+    "2122212": "Dorian",
+    "1222122": "Phrygian",
+    "2221221": "Lydian",
+    "2212212": "Mixolydian",
+    "321132": "Minor",
+    "211323": "Major",
+    "113232": "Egyptian?",
+    "132321": "The blues note",
+    "323211": "Some minor",
+    "232113": "Some major",
+};
+
 const DIATONIC = {
     aeolian: { name: "Eolian", intervals: "2122122" },
     locrian: { name: "Locrian", intervals: "1221222" },
@@ -16,7 +44,7 @@ const JAZZ = {
     mode_2212122: { name: "Aeolian dominant (Melodic major)", intervals: "2212122" },
     mode_2121222: { name: "Half-diminished", intervals: "2121222" },
     mode_1212222: { name: "Super Locrian", intervals: "1212222" },
-}
+};
 
 const BLUES = {
     mode_321132: { name: "Minor", intervals: "321132" } as Modus,
@@ -38,11 +66,7 @@ const PENTATONIC = {
 const OCTATONIC = {
     mode_12121212: { name: "Half-step / Whole step", intervals: "12121212" },
     mode_21212121: { name: "Whole step / Half-step", intervals: "21212121" },
-}
-
-const WHOLETONE = {    
-    mode_222222: { name: "Whole-tone", intervals: "222222" },
-}
+};
 
 const DOUBLE_HARMONIC = {
     mode_1131213: { name: "Locrian bb3 bb7", intervals: "1131213" } as Modus,
@@ -74,13 +98,13 @@ const HARMONIC_MAJOR = {
     mode_2121312: { name: "2121312", intervals: "2121312" } as Modus,
 };
 
-const JAPANESE_PENTATONIC = {    
+const JAPANESE_PENTATONIC = {
     mode_42141: { name: "Hirajoshi", intervals: "42141" },
     mode_21414: { name: "Box 2", intervals: "21414" },
     mode_14142: { name: "Iwato", intervals: "14142" },
     mode_41421: { name: "Box 4", intervals: "41421" },
     mode_14214: { name: "Miyako-bushi (In scale)", intervals: "14214" },
-}
+};
 
 const INSEN_PENTATONIC = {
     mode_14232: { name: "Box 0", intervals: "14232" },
@@ -88,7 +112,7 @@ const INSEN_PENTATONIC = {
     mode_23214: { name: "Box 2", intervals: "23214" },
     mode_32142: { name: "Box 3", intervals: "32142" },
     mode_21423: { name: "Box 4", intervals: "21423" },
-}
+};
 
 const TRITONE = {
     mode_321321: { name: "Third", intervals: "321321" } as Modus,
@@ -375,75 +399,77 @@ const scale_1212132 = {
     mode_2121213: { name: "2121213", intervals: "2121213" } as Modus,
 };
 
-export const SCALES = {
-    diatonic: DIATONIC, 
-    pentatonic: PENTATONIC,
-    blues: BLUES,
-    jazz: JAZZ,
-    octatonic: OCTATONIC,
-    wholetone: WHOLETONE,
-    "Japanese pentatonic": JAPANESE_PENTATONIC,
-    "Insen pentatonic": INSEN_PENTATONIC,
-    "harmonic minor": HARMONIC_MINOR,
-    "harmonic major": HARMONIC_MAJOR,
-    "Double harmonic": DOUBLE_HARMONIC,
-    augmented: AUGMENTED,
-    tritone: TRITONE,
+// export const SCALES = {
+//     diatonic: DIATONIC,
+//     pentatonic: PENTATONIC,
+//     blues: BLUES,
+//     jazz: JAZZ,
+//     octatonic: OCTATONIC,
+//     wholetone: WHOLETONE,
+//     "Japanese pentatonic": JAPANESE_PENTATONIC,
+//     "Insen pentatonic": INSEN_PENTATONIC,
+//     "harmonic minor": HARMONIC_MINOR,
+//     "harmonic major": HARMONIC_MAJOR,
+//     "Double harmonic": DOUBLE_HARMONIC,
+//     augmented: AUGMENTED,
+//     tritone: TRITONE,
 
-    scale_112323: scale_112323,
-    scale_113223: scale_113223,
-    scale_121323: scale_121323,
-    scale_122223: scale_122223,
-    scale_122232: scale_122232,
-    scale_122313: scale_122313,
-    scale_122322: scale_122322,
-    scale_123123: scale_123123,
-    scale_123132: scale_123132,
-    scale_123213: scale_123213,
-    scale_123222: scale_123222,
-    scale_131322: scale_131322,
-    scale_132222: scale_132222,
-    scale_1121223: scale_1121223,
-    scale_1121232: scale_1121232,
-    scale_1121313: scale_1121313,
-    scale_1121322: scale_1121322,
-    scale_1122123: scale_1122123,
-    scale_1122132: scale_1122132,
-    scale_1122213: scale_1122213,
-    scale_1122312: scale_1122312,
-    scale_1123122: scale_1123122,
-    scale_1123212: scale_1123212,
-    scale_1131222: scale_1131222,
-    scale_1131312: scale_1131312,
-    scale_1132122: scale_1132122,
-    scale_1132212: scale_1132212,
-    scale_1212123: scale_1212123,
-    scale_1212132: scale_1212132,
-};
+//     scale_112323: scale_112323,
+//     scale_113223: scale_113223,
+//     scale_121323: scale_121323,
+//     scale_122223: scale_122223,
+//     scale_122232: scale_122232,
+//     scale_122313: scale_122313,
+//     scale_122322: scale_122322,
+//     scale_123123: scale_123123,
+//     scale_123132: scale_123132,
+//     scale_123213: scale_123213,
+//     scale_123222: scale_123222,
+//     scale_131322: scale_131322,
+//     scale_132222: scale_132222,
+//     scale_1121223: scale_1121223,
+//     scale_1121232: scale_1121232,
+//     scale_1121313: scale_1121313,
+//     scale_1121322: scale_1121322,
+//     scale_1122123: scale_1122123,
+//     scale_1122132: scale_1122132,
+//     scale_1122213: scale_1122213,
+//     scale_1122312: scale_1122312,
+//     scale_1123122: scale_1123122,
+//     scale_1123212: scale_1123212,
+//     scale_1131222: scale_1131222,
+//     scale_1131312: scale_1131312,
+//     scale_1132122: scale_1132122,
+//     scale_1132212: scale_1132212,
+//     scale_1212123: scale_1212123,
+//     scale_1212132: scale_1212132,
+// };
 
 export type Scale = keyof typeof SCALES;
 export type Modes = (typeof SCALES)[Scale];
 export type Modus = { name: string; intervals: string };
 
-export function getIntervalsByModus(scale: Scale, modeName: string): string {
-    return getModusByName(scale, modeName).intervals;
-}
+// export function getModusByName(scale: Scale, modeName: string): Modus {
+//     let modes = SCALES[scale as Scale] as Modes;
 
-export function getModusByName(scale: Scale, modeName: string): Modus {
-    let modes = SCALES[scale as Scale] as Modes;
+//     if (Object.keys(modes).includes(modeName)) {
+//         return Object.values(modes)[Object.keys(modes).indexOf(modeName)];
+//     }
 
-    if (Object.keys(modes).includes(modeName)) {
-        return Object.values(modes)[Object.keys(modes).indexOf(modeName)];
-    }
-    
-    return Object.values(modes)[0];
-}
+//     return Object.values(modes)[0];
+// }
 
-export function getModusSteps(scale: Scale, modeName: string): number[] {
-    let intervals = getIntervalsByModus(scale, modeName);
-    return intervals.split("").map((s) => Number(s));
-}
+// export function getModusSteps(scale: Scale, modeName: string): number[] {
+//     let intervals = getIntervalsByModus(scale, modeName);
+//     return intervals.split("").map((s) => Number(s));
+// }
 
 export function getAllModusByScale(scale: Scale): string[] {
-    return Object.keys(SCALES[scale]);
+    let modes: string[] = [];
+
+    for (let i of getRange(0, scale.length)) {
+        modes.push(scale.slice(i) + scale.slice(0, i));
+    }
+
+    return modes;
 }

@@ -8,23 +8,21 @@ import { createEffect, createSignal } from "solid-js";
 import { useKeyboardInput } from "@services/keyboard";
 import { Scale } from "@lib/scales";
 import { FavoriteSelect } from "./components/FavoriteSelect";
-import { FavoriteButton } from "./components/FavoriteButton";
 import "./App.css";
-import { Die } from "./icons/Die";
 
 type Mode = "choose-tonic" | "play";
 
 function App() {
     const [mode, setMode] = createSignal<Mode>("choose-tonic");
-    const [scale, setScale] = createSignal<Scale>("diatonic");
-    const [modus, setModus] = createSignal<string>("ionian");
+    const [scale, setScale] = createSignal<Scale>("2122122");
+    const [modus, setModus] = createSignal<string>("2122122");
     const [tonic, setTonic] = createSignal(0);
     const [rootNote, setRootNote] = createSignal(0);
     const [chordName, setChordName] = createSignal<string>("");
 
-    const scaleNotes = () => buildScale(scale(), modus(), tonic());
+    const scaleNotes = () => buildScale(modus(), tonic());
     const chordNotes = () => buildChord(chordName(), rootNote());
-    const possibleChords = () => getPossibleChords(scale(), modus());
+    const possibleChords = () => getPossibleChords(modus());
 
     const pressedKeys = useKeyboardInput(scale, modus, tonic);
 
@@ -63,7 +61,9 @@ function App() {
         setChordName(chord);
     });
 
-    const [favoriteList, setFavoriteList] = createSignal<string[]>([]);
+    const [favoriteList, setFavoriteList] = createSignal<string[]>(
+        JSON.parse(localStorage.getItem("favoriteList") ?? ""),
+    );
 
     const currentScaleAndModeId = () => scale() + ";" + modus();
     const currentScaleAndModeInFavorite = () => favoriteList().includes(currentScaleAndModeId());
@@ -86,6 +86,8 @@ function App() {
             setFavoriteList((prev) => [...prev, scaleAndMode]);
         }
     };
+
+    createEffect(() => localStorage.setItem("favoriteList", JSON.stringify(favoriteList())));
 
     return (
         <div class="app">

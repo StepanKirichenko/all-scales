@@ -1,15 +1,14 @@
 import { CHORD_INTERVALS, NOTES, OCTAVE_LENGTH } from "@lib/constants";
-import { getIntervalsByModus, getModusSteps, Scale } from "./scales";
 
 /**
  * Get all the chords possible in the current scale
  * @param scaleName
  * @returns Array of sets of chords that can be built from each of the scale's steps
  */
-export function getPossibleChords(scaleName: Scale, modusName: string): Array<Set<string>> {
+export function getPossibleChords(modusName: string): Array<Set<string>> {
     const possibleChords: Array<Set<string>> = [];
 
-    const scale = getIntervalsByModus(scaleName, modusName);
+    const scale = modusName;
     for (let fromIndex = 0; fromIndex < scale.length; fromIndex += 1) {
         const currentStepChords = new Set<string>();
 
@@ -42,8 +41,8 @@ export function getPossibleChords(scaleName: Scale, modusName: string): Array<Se
     return possibleChords;
 }
 
-export function getNoteInScale(scale: Scale, modus: string, tonic: number, step: number): number {
-    const intervals = getIntervalsByModus(scale, modus);
+export function getNoteInScale(modus: string, tonic: number, step: number): number {
+    const intervals = modus;
 
     let offset = 0;
 
@@ -64,20 +63,20 @@ export function getNoteBaseName(note: number): string {
  * @param tonic The index of the tonic in the NOTES array
  * @returns A set of indices of notes included in the scale
  */
-export function buildScale(scale: Scale, modus: string, tonic: number): Map<number, number> {
-    const steps = getModusSteps(scale, modus);
+export function buildScale(modus: string, tonic: number): Map<number, number> {
+    const steps = modus;
     const result = new Map<number, number>();
     let stepIndex = 0;
     let noteIndex = tonic;
     while (noteIndex < NOTES.length) {
         result.set(noteIndex, stepIndex);
-        noteIndex += steps[stepIndex];
+        noteIndex += Number(steps[stepIndex]);
         stepIndex = (stepIndex + 1) % steps.length;
     }
     stepIndex = steps.length - 1;
     noteIndex = tonic;
     while (true) {
-        noteIndex -= steps[stepIndex];
+        noteIndex -= Number(steps[stepIndex]);
         if (noteIndex < 0) break;
         result.set(noteIndex, stepIndex);
         stepIndex = (stepIndex - 1 + steps.length) % steps.length;

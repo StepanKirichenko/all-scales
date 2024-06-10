@@ -1,4 +1,4 @@
-import { SCALES, Scale, getAllModusByScale, getModusByName } from "@lib/scales";
+import { MODES, SCALES, Scale, getAllModusByScale } from "@lib/scales";
 import { Die } from "@ui/icons/Die";
 import { Star } from "@ui/icons/Star";
 import { StarFilled } from "@ui/icons/StarFilled";
@@ -21,7 +21,7 @@ export function ScaleSelect(props: ScaleSelectProps) {
         >
             <For each={Object.keys(SCALES)}>
                 {(scale) => (
-                    <option value={scale}>{scale[0].toUpperCase() + scale.slice(1)}</option>
+                    <option value={scale}>{SCALES[scale] ?? scale}</option>
                 )}
             </For>
         </select>
@@ -37,6 +37,7 @@ interface ModusSelectProps {
 }
 
 export function ModusSelect(props: ModusSelectProps) {
+    console.log(getAllModusByScale(props.scale))
     return (
         <div class="modus-select">
             <For each={getAllModusByScale(props.scale)}>
@@ -48,7 +49,7 @@ export function ModusSelect(props: ModusSelectProps) {
                         }}
                     >
                         <button class="modus-select__button" onClick={() => props.setModus(modus)}>
-                            {getModusByName(props.scale, modus).name}
+                            {MODES[modus] ?? modus}
                         </button>
                         <button
                             classList={{
@@ -78,7 +79,7 @@ export function RandomizeButton(props: RandomizeButtonProps) {
             onClick={() => {
                 let scales = Object.keys(SCALES);
                 let scale = scales[Math.floor(Math.random() * scales.length)];
-                let moduses = Object.keys(SCALES[scale as Scale]);
+                let moduses = getAllModusByScale(scale);
                 let modus = moduses[Math.floor(Math.random() * moduses.length)];
 
                 props.setScale(scale as Scale);
