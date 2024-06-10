@@ -8,6 +8,7 @@ import { createEffect, createSignal } from "solid-js";
 import { useKeyboardInput } from "@services/keyboard";
 import { Scale } from "@lib/scales";
 import { FavoriteSelect } from "./components/FavoriteSelect";
+import { FavoriteButton } from "./components/FavoriteButton";
 import "./App.css";
 
 type Mode = "choose-tonic" | "play";
@@ -66,6 +67,14 @@ function App() {
     const currentScaleAndModeId = () => scale() + ";" + modus();
     const currentScaleAndModeInFavorite = () => favoriteList().includes(currentScaleAndModeId());
 
+    const toggleFavorite = () => {
+        if (currentScaleAndModeInFavorite()) {
+            setFavoriteList((prev) => prev.filter((id) => id !== currentScaleAndModeId()));
+        } else {
+            setFavoriteList((prev) => [...prev, currentScaleAndModeId()]);
+        }
+    };
+
     return (
         <div class="app">
             <div class="flex-column-centered">
@@ -81,7 +90,7 @@ function App() {
                     onPointerDown={onPianoKeyPointerDown}
                     onPointerUp={onPianoKeyPointerUp}
                 />
-                <div>
+                <div class="scale-select-row">
                     <FavoriteSelect
                         favoriteList={favoriteList()}
                         setScale={setScale}
@@ -95,21 +104,10 @@ function App() {
                         modus={modus()}
                         setModus={setModus}
                     />
-                    <button
-                        onClick={() => {
-                            if (currentScaleAndModeInFavorite()) {
-                                setFavoriteList((prev) =>
-                                    prev.filter((id) => id !== currentScaleAndModeId()),
-                                );
-                            } else {
-                                setFavoriteList((prev) => [...prev, currentScaleAndModeId()]);
-                            }
-                        }}
-                    >
-                        {favoriteList().includes(currentScaleAndModeId())
-                            ? "Remove from favorite"
-                            : "Add to favorite"}
-                    </button>
+                    <FavoriteButton
+                        isFavorite={currentScaleAndModeInFavorite()}
+                        onClick={toggleFavorite}
+                    />
                 </div>
                 <ChordsTable
                     scale={scale()}

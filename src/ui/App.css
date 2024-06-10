@@ -22,3 +22,9 @@ body {
     align-items: center;
     gap: 1rem;
 }
+
+.scale-select-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
