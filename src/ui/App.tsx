@@ -62,7 +62,7 @@ function App() {
     });
 
     const [favoriteList, setFavoriteList] = createSignal<string[]>(
-        JSON.parse(localStorage.getItem("favoriteList") ?? ""),
+        JSON.parse(localStorage.getItem("favoriteList") ?? "null") ?? [],
     );
 
     const currentScaleAndModeId = () => scale() + ";" + modus();
