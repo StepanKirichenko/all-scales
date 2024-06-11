@@ -41,16 +41,6 @@ export function StepCountSelect(props: StepCountSelectProps) {
             </For>
         </div>
     );
-    return (
-        <select
-            onInput={(event) => {
-                props.setStepCount(Number(event.target.value));
-            }}
-            value={props.stepCount}
-        >
-            <For each={options}>{(count) => <option value={count}>{count} steps</option>}</For>
-        </select>
-    );
 }
 
 interface ScaleSelectProps {
@@ -62,7 +52,7 @@ interface ScaleSelectProps {
 
 export function ScaleSelect(props: ScaleSelectProps) {
     const options = () => Object.keys(SCALES).filter((scale) => scale.length === props.stepCount);
-
+    console.log(options());
     return (
         <div class="modus-select">
             <span class="modus-select__title">Scale</span>
@@ -74,13 +64,7 @@ export function ScaleSelect(props: ScaleSelectProps) {
                             "modus-select__modus--current": props.scale === scale,
                         }}
                     >
-                        <button
-                            class="modus-select__button"
-                            onClick={() => {
-                                props.setScale(scale);
-                                props.setModus(getAllModusByScale(scale)[0]);
-                            }}
-                        >
+                        <button class="modus-select__button" onClick={() => props.setScale(scale)}>
                             {SCALES[scale] ?? scale}
                         </button>
                     </div>

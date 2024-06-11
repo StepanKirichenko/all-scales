@@ -4,15 +4,43 @@
     box-sizing: border-box;
 }
 
+h1 {
+    margin-top: 40px;
+}
+
+#root {
+    display: flex;
+    justify-content: center;
+}
+
 body {
     background-color: #222;
     color: #ccc;
+    font-family: "", sans-serif;
+    scrollbar-width: thin;
+    scrollbar-color: #35C #444;
+}
+
+body::-webkit-scrollbar {
+    width: 12px; /* ширина scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+    background: #444; /* цвет дорожки */
+    width: 100px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #35C; /* цвет плашки */
+    border-radius: 20px; /* закругления плашки */
+    border: 3px solid #444; /* padding вокруг плашки */
 }
 
 .app {
     display: flex;
-    width: 100dvw;
     min-height: 100dvh;
+    margin-inline: auto;
+    gap: 1rem;
 }
 
 .scale-mode-select-section {

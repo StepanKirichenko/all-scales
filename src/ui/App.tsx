@@ -3,10 +3,15 @@ import { OCTAVE_LENGTH } from "@lib/constants";
 import { buildChord, buildScale, getPossibleChords } from "@lib/music";
 import { ChordsTable } from "@ui/components/ChordsTable";
 import { Piano } from "@ui/components/Piano";
-import { ModusSelect, RandomizeButton, ScaleSelect, StepCountSelect } from "@ui/components/ScaleSelect";
+import {
+    ModusSelect,
+    RandomizeButton,
+    ScaleSelect,
+    StepCountSelect,
+} from "@ui/components/ScaleSelect";
 import { createEffect, createSignal } from "solid-js";
 import { useKeyboardInput } from "@services/keyboard";
-import { DEFAULT_SCALES, SCALES, Scale } from "@lib/scales";
+import { DEFAULT_SCALES, MODES, SCALES, Scale } from "@lib/scales";
 import { FavoriteSelect } from "./components/FavoriteSelect";
 import "./App.css";
 
@@ -105,7 +110,12 @@ function App() {
                     setStepCount={setStepCount}
                 />
                 <StepCountSelect stepCount={stepCount()} setStepCount={setStepCount} />
-                <ScaleSelect stepCount={stepCount()} scale={scale()} setScale={setScale} setModus={setModus} />
+                <ScaleSelect
+                    stepCount={stepCount()}
+                    scale={scale()}
+                    setScale={setScale}
+                    setModus={setModus}
+                />
                 <ModusSelect
                     scale={scale()}
                     modus={modus()}
@@ -118,8 +128,10 @@ function App() {
                 </div>
             </section>
             <div class="flex-column-centered">
+                <h1>{MODES[modus()]}</h1>
+
                 <button onClick={onModeToggle}>
-                    {mode() === "choose-tonic" ? "Play" : "Stop playing"}
+                    {mode() === "choose-tonic" ? "Click to set tonic" : "Click to play"}
                 </button>
                 <Piano
                     chordNotes={chordNotes()}
