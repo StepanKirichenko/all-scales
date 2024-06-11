@@ -6,7 +6,14 @@ export function getScalesByStepCount(stepCount: number): string[] {
 
 export const SCALES: Record<string, string> = {
     "2122122": "Diatonic",
+    "1131213": "Double harmonic",
     "321132": "Blues",
+    "222222": "Whole tone",
+};
+
+export const DEFAULT_SCALES: Record<number, string> = {
+    6: "222222",
+    7: "2122122",
 };
 
 export const MODES: Record<string, string> = {
@@ -24,6 +31,14 @@ export const MODES: Record<string, string> = {
     "132321": "The blues note",
     "323211": "Some minor",
     "232113": "Some major",
+    "1131213": "Locrian bb3 bb7",
+    "1312131": "Major (Flamenko)",
+    "3121311": "Lydian ♯2 ♯6",
+    "1213113": "Ultraphrygian",
+    "2131131": "Hungarian Gipsy minor",
+    "1311312": "Oriental",
+    "3113121": "Ionian ♯2 ♯5",
+    "222222": "Whole tone",
 };
 
 const DIATONIC = {
@@ -465,11 +480,11 @@ export type Modus = { name: string; intervals: string };
 // }
 
 export function getAllModusByScale(scale: Scale): string[] {
-    let modes: string[] = [];
+    const modes = new Set<string>();
 
     for (let i of getRange(0, scale.length)) {
-        modes.push(scale.slice(i) + scale.slice(0, i));
+        modes.add(scale.slice(i) + scale.slice(0, i));
     }
 
-    return modes;
+    return Array.from(modes.values());
 }

@@ -5,6 +5,7 @@ interface FavoriteSelectProps {
     favoriteList: string[];
     setScale: (scale: Scale) => void;
     setModus: (modus: string) => void;
+    setStepCount: (count: number) => void;
 }
 
 export function FavoriteSelect(props: FavoriteSelectProps) {
@@ -32,6 +33,7 @@ export function FavoriteSelect(props: FavoriteSelectProps) {
                             value="Favorite"
                             onClick={() => {
                                 props.setScale(scale as Scale);
+                                props.setStepCount(scale.length)
                                 props.setModus(modus);
                                 console.log(scale, modus);
                             }}

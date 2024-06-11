@@ -3,10 +3,10 @@ import { OCTAVE_LENGTH } from "@lib/constants";
 import { buildChord, buildScale, getPossibleChords } from "@lib/music";
 import { ChordsTable } from "@ui/components/ChordsTable";
 import { Piano } from "@ui/components/Piano";
-import { ModusSelect, RandomizeButton, ScaleSelect } from "@ui/components/ScaleSelect";
+import { ModusSelect, RandomizeButton, ScaleSelect, StepCountSelect } from "@ui/components/ScaleSelect";
 import { createEffect, createSignal } from "solid-js";
 import { useKeyboardInput } from "@services/keyboard";
-import { Scale } from "@lib/scales";
+import { DEFAULT_SCALES, SCALES, Scale } from "@lib/scales";
 import { FavoriteSelect } from "./components/FavoriteSelect";
 import "./App.css";
 
@@ -14,6 +14,7 @@ type Mode = "choose-tonic" | "play";
 
 function App() {
     const [mode, setMode] = createSignal<Mode>("choose-tonic");
+    const [stepCount, setStepCount] = createSignal<number>(7);
     const [scale, setScale] = createSignal<Scale>("2122122");
     const [modus, setModus] = createSignal<string>("2122122");
     const [tonic, setTonic] = createSignal(0);
@@ -87,6 +88,11 @@ function App() {
         }
     };
 
+    createEffect(() => {
+        const newScale = DEFAULT_SCALES[stepCount()];
+        setScale(newScale);
+    });
+
     createEffect(() => localStorage.setItem("favoriteList", JSON.stringify(favoriteList())));
 
     return (
@@ -96,8 +102,10 @@ function App() {
                     favoriteList={favoriteList()}
                     setScale={setScale}
                     setModus={setModus}
+                    setStepCount={setStepCount}
                 />
-                <ScaleSelect scale={scale()} setScale={setScale} setModus={setModus} />
+                <StepCountSelect stepCount={stepCount()} setStepCount={setStepCount} />
+                <ScaleSelect stepCount={stepCount()} scale={scale()} setScale={setScale} setModus={setModus} />
                 <ModusSelect
                     scale={scale()}
                     modus={modus()}

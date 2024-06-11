@@ -1,0 +1,64 @@
+.modus-select {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    border: 2px solid white;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.modus-select.modus-select--horizontal {
+    flex-direction: row;
+}
+
+.modus-select__modus {
+    border-radius: 8px;
+    padding: 4px 8px;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.modus-select__modus:hover {
+    background-color: #fff3;
+}
+
+.modus-select__modus.modus-select__modus--current {
+    background-color: white;
+    color: black;
+}
+
+.modus-select__button {
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: start;
+    flex-grow: 1;
+}
+
+.modus-select__favorite {
+    background: none;
+    border: none;
+    color: inherit;
+    width: 16px;
+    height: 16px;
+    opacity: 0;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.modus-select__favorite--active,
+.modus-select__modus:hover .modus-select__favorite {
+    opacity: 1;
+}
+
+.modus-select__title {
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 0.5rem;
+    font-family: sans-serif;
+    padding: 4px 8px;
+    margin-block-end: -4px;
+    opacity: 0.7;
+    letter-spacing: 0.125rem;
+}

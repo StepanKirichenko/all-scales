@@ -4,27 +4,89 @@ import { Star } from "@ui/icons/Star";
 import { StarFilled } from "@ui/icons/StarFilled";
 import { For } from "solid-js";
 
+import "./ScaleSelect.css";
+
+interface StepCountSelectProps {
+    stepCount: number;
+    setStepCount: (value: number) => void;
+}
+
+export function StepCountSelect(props: StepCountSelectProps) {
+    const optionsSet = new Set<number>();
+    for (const key of Object.keys(SCALES)) {
+        optionsSet.add(key.length);
+    }
+    const options = Array.from(optionsSet.values()).sort((a, b) => a - b);
+
+    return (
+        <div class="modus-select modus-select--horizontal">
+            <For each={options}>
+                {(count) => (
+                    <div
+                        classList={{
+                            "modus-select__modus": true,
+                            "modus-select__modus--current": props.stepCount === count,
+                        }}
+                    >
+                        <button
+                            class="modus-select__button"
+                            onClick={() => {
+                                props.setStepCount(count);
+                            }}
+                        >
+                            {count}
+                        </button>
+                    </div>
+                )}
+            </For>
+        </div>
+    );
+    return (
+        <select
+            onInput={(event) => {
+                props.setStepCount(Number(event.target.value));
+            }}
+            value={props.stepCount}
+        >
+            <For each={options}>{(count) => <option value={count}>{count} steps</option>}</For>
+        </select>
+    );
+}
+
 interface ScaleSelectProps {
+    stepCount: number;
     scale: Scale;
     setScale: (scale: Scale) => void;
     setModus: (modus: string) => void;
 }
 
 export function ScaleSelect(props: ScaleSelectProps) {
+    const options = () => Object.keys(SCALES).filter((scale) => scale.length === props.stepCount);
+
     return (
-        <select
-            onInput={(event) => {
-                props.setScale(event.target.value as Scale);
-                props.setModus(getAllModusByScale(event.target.value as Scale)[0]);
-            }}
-            value={props.scale}
-        >
-            <For each={Object.keys(SCALES)}>
+        <div class="modus-select">
+            <span class="modus-select__title">Scale</span>
+            <For each={options()}>
                 {(scale) => (
-                    <option value={scale}>{SCALES[scale] ?? scale}</option>
+                    <div
+                        classList={{
+                            "modus-select__modus": true,
+                            "modus-select__modus--current": props.scale === scale,
+                        }}
+                    >
+                        <button
+                            class="modus-select__button"
+                            onClick={() => {
+                                props.setScale(scale);
+                                props.setModus(getAllModusByScale(scale)[0]);
+                            }}
+                        >
+                            {SCALES[scale] ?? scale}
+                        </button>
+                    </div>
                 )}
             </For>
-        </select>
+        </div>
     );
 }
 
@@ -37,9 +99,9 @@ interface ModusSelectProps {
 }
 
 export function ModusSelect(props: ModusSelectProps) {
-    console.log(getAllModusByScale(props.scale))
     return (
         <div class="modus-select">
+            <span class="modus-select__title">Modus</span>
             <For each={getAllModusByScale(props.scale)}>
                 {(modus) => (
                     <div
