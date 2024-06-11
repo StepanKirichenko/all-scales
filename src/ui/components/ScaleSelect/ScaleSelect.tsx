@@ -52,7 +52,6 @@ interface ScaleSelectProps {
 
 export function ScaleSelect(props: ScaleSelectProps) {
     const options = () => Object.keys(SCALES).filter((scale) => scale.length === props.stepCount);
-    console.log(options());
     return (
         <div class="modus-select">
             <span class="modus-select__title">Scale</span>

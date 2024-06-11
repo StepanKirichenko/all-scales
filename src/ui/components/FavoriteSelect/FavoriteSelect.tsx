@@ -35,7 +35,6 @@ export function FavoriteSelect(props: FavoriteSelectProps) {
                                 props.setScale(scale as Scale);
                                 props.setStepCount(scale.length)
                                 props.setModus(modus);
-                                console.log(scale, modus);
                             }}
                         >
                             {SCALES[scale] + " " + MODES[modus]}
