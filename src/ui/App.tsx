@@ -11,7 +11,7 @@ import {
 } from "@ui/components/ScaleSelect";
 import { createEffect, createSignal } from "solid-js";
 import { useKeyboardInput } from "@services/keyboard";
-import { DEFAULT_SCALES, MODES, SCALES, Scale } from "@lib/scales";
+import { DEFAULT_SCALES, MODES, Scale } from "@lib/scales";
 import { FavoriteSelect } from "./components/FavoriteSelect";
 import "./App.css";
 
@@ -70,17 +70,6 @@ function App() {
     const [favoriteList, setFavoriteList] = createSignal<string[]>(
         JSON.parse(localStorage.getItem("favoriteList") ?? "null") ?? [],
     );
-
-    const currentScaleAndModeId = () => scale() + ";" + modus();
-    const currentScaleAndModeInFavorite = () => favoriteList().includes(currentScaleAndModeId());
-
-    const toggleFavorite = () => {
-        if (currentScaleAndModeInFavorite()) {
-            setFavoriteList((prev) => prev.filter((id) => id !== currentScaleAndModeId()));
-        } else {
-            setFavoriteList((prev) => [...prev, currentScaleAndModeId()]);
-        }
-    };
 
     const isModeInFavorites = (mode: string) => favoriteList().includes(scale() + ";" + mode);
 
