@@ -16,7 +16,7 @@ export function usePlayKeyboardSound(pressedKeys: ReactiveSet<number>) {
 
     for (let i = 0; i < 36; i++) {
         const osc = audioContext.createOscillator();
-        osc.type = "sine";
+        osc.type = "sawtooth";
         osc.frequency.value = currentNoteFreq;
         oscList.push(osc);
         osc.start();

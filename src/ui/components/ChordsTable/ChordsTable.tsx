@@ -1,11 +1,13 @@
-import { CHORDS, OCTAVE_LENGTH, SCALES, Scale } from "@lib/constants";
+import { CHORDS, OCTAVE_LENGTH } from "@lib/constants";
 import { getNoteBaseName, getNoteInScale } from "@lib/music";
 import { getRange } from "@lib/utils";
 import { For } from "solid-js";
 import "./ChordsTable.css";
+import { Scale } from "@lib/scales";
 
 interface ChordsTableProps {
     scale: Scale;
+    modus: string;
     tonic: number;
     possibleChords: Array<Set<string>>;
     rootNote: number;
@@ -15,7 +17,7 @@ interface ChordsTableProps {
 }
 
 export function ChordsTable(props: ChordsTableProps) {
-    const scaleLength = () => SCALES[props.scale].intervals.length;
+    const scaleLength = () => props.modus.length;
 
     return (
         <section class={`chord-table rows-${scaleLength()}`}>
@@ -25,10 +27,10 @@ export function ChordsTable(props: ChordsTableProps) {
                         <For each={group.chords}>
                             {(chord) => (
                                 <>
-                                    <For each={getRange(0, scaleLength())}>
+                                    <For each={Array.from(getRange(0, scaleLength()))}>
                                         {(step) => {
                                             const note = () =>
-                                                getNoteInScale(props.scale, props.tonic, step) %
+                                                getNoteInScale(props.modus, props.tonic, step) %
                                                 OCTAVE_LENGTH;
                                             const noteName = () => getNoteBaseName(note());
                                             const chordDisplayName = () => noteName() + chord.name;

@@ -4,16 +4,54 @@
     box-sizing: border-box;
 }
 
+h1 {
+    margin-top: 40px;
+}
+
+#root {
+    display: flex;
+    justify-content: center;
+}
+
 body {
     background-color: #222;
     color: #ccc;
+    font-family: "", sans-serif;
+    scrollbar-width: thin;
+    scrollbar-color: #35C #444;
+}
+
+body::-webkit-scrollbar {
+    width: 12px; /* ширина scrollbar */
+}
+
+body::-webkit-scrollbar-track {
+    background: #444; /* цвет дорожки */
+    width: 100px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #35C; /* цвет плашки */
+    border-radius: 20px; /* закругления плашки */
+    border: 3px solid #444; /* padding вокруг плашки */
 }
 
 .app {
-    display: grid;
-    place-content: center;
-    width: 100dvw;
-    height: 100dvh;
+    display: flex;
+    min-height: 100dvh;
+    margin-inline: auto;
+    gap: 1rem;
+}
+
+.scale-mode-select-section {
+    --width: 150px;
+    min-width: var(--width);
+    max-width: var(--width);
+    width: var(--width);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0.5rem;
+    gap: 0.5rem;
 }
 
 .flex-column-centered {
@@ -21,4 +59,27 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+}
+
+.scale-select-row {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    padding: none;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+
+    color: white;
+}
+
+.buttons-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
