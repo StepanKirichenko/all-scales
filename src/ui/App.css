@@ -21,6 +21,10 @@ body {
     scrollbar-color: #35C #444;
 }
 
+button {
+    font: inherit;
+}
+
 body::-webkit-scrollbar {
     width: 12px; /* ширина scrollbar */
 }

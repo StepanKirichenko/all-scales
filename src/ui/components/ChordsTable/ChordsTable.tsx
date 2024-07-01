@@ -38,30 +38,16 @@ export function ChordsTable(props: ChordsTableProps) {
                                     getNoteInScale(props.modus, props.tonic, stepIndex) %
                                     OCTAVE_LENGTH;
                                 const noteName = () => getNoteBaseName(note());
-                                const chordDisplayName = () => noteName() + chord;
                                 const isActive = () =>
                                     note() === props.rootNote && chord === props.chordName;
 
                                 return (
-                                    <div class="chord-button-container">
-                                        <button
-                                            classList={{
-                                                "chord-button": true,
-                                                active: isActive(),
-                                            }}
-                                            // onClick={() => {
-                                            //     props.setRootNote(note());
-                                            //     props.setChordName(chord.name);
-                                            // }}
-                                        >
-                                            {chordDisplayName()}
-                                        </button>
-                                        <button class="chord-button__add-to-sequence">
-                                            <div>
-                                                <Plus />
-                                            </div>
-                                        </button>
-                                    </div>
+                                    <ChordButton
+                                        isActive={isActive()}
+                                        stepIndex={stepIndex}
+                                        chord={chord}
+                                        noteName={noteName()}
+                                    />
                                 );
                             }}
                         </For>
@@ -69,5 +55,42 @@ export function ChordsTable(props: ChordsTableProps) {
                 )}
             </For>
         </section>
+    );
+}
+
+interface ChordButtonProps {
+    isActive: boolean;
+    stepIndex: number;
+    chord: string;
+    noteName: string;
+}
+
+function ChordButton(props: ChordButtonProps) {
+    return (
+        <div class="chord-button-container">
+            <button
+                classList={{
+                    "chord-button": true,
+                }}
+                // onClick={() => {
+                //     props.setRootNote(note());
+                //     props.setChordName(chord.name);
+                // }}
+            >
+                <div class="chord-button__note-container">
+                    <span class="chord-button__note">
+                        {props.noteName[0]}
+                        <span class="chord-button__sharp ">{props.noteName[1]}</span>
+                    </span>
+                </div>
+                <span class="chord-button__step-index">{props.stepIndex}</span>
+                <span class="chord-button__chord-name">{props.chord}</span>
+            </button>
+            <button class="chord-button__add-to-sequence">
+                <div>
+                    <Plus />
+                </div>
+            </button>
+        </div>
     );
 }

@@ -13,8 +13,39 @@
     gap:L 0.25rem;
 }
 
-.chord-button-container {
+.chord-button__note-container {
+    position: absolute;
+    top: -6px;
+    left: 2px;
+    text-transform: uppercase;
+}
+
+.chord-button__step-index {
+    position: absolute;
+    bottom: 2px;
+    left: 2px;
+}
+
+.chord-button__chord-name {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+}
+
+.chord-button__note {
+    font-size: 42px;
+    font-weight: 900; 
+}
+
+.chord-button__sharp  {
+    font-size: 16px;
+    font-weight: 900;
     position: relative;
+    left: -2px;
+}
+
+.chord-button-container {
+    position: relative;  
 }
 
 .chord-button {
