@@ -4,12 +4,13 @@ import { getRange } from "@lib/utils";
 import { For } from "solid-js";
 import "./ChordsTable.css";
 import { Scale } from "@lib/scales";
+import { Plus } from "@ui/icons/Plus";
 
 interface ChordsTableProps {
     scale: Scale;
     modus: string;
     tonic: number;
-    possibleChords: Array<Set<string>>;
+    possibleChords: Record<string, number[]>;
     rootNote: number;
     chordName: string;
     setRootNote: (note: number) => void;
@@ -19,49 +20,52 @@ interface ChordsTableProps {
 export function ChordsTable(props: ChordsTableProps) {
     const scaleLength = () => props.modus.length;
 
-    return (
-        <section class={`chord-table rows-${scaleLength()}`}>
-            <For each={CHORDS}>
-                {(group) => (
-                    <>
-                        <For each={group.chords}>
-                            {(chord) => (
-                                <>
-                                    <For each={Array.from(getRange(0, scaleLength()))}>
-                                        {(step) => {
-                                            const note = () =>
-                                                getNoteInScale(props.modus, props.tonic, step) %
-                                                OCTAVE_LENGTH;
-                                            const noteName = () => getNoteBaseName(note());
-                                            const chordDisplayName = () => noteName() + chord.name;
-                                            const isActive = () =>
-                                                note() === props.rootNote &&
-                                                chord.name === props.chordName;
+    let chords: string[] = [];
+    for (const group of CHORDS) {
+        for (const chord of group.chords) {
+            chords.push(chord.name);
+        }
+    }
 
-                                            return (
-                                                <button
-                                                    classList={{
-                                                        "chord-button": true,
-                                                        active: isActive(),
-                                                    }}
-                                                    disabled={
-                                                        !props.possibleChords[step].has(chord.name)
-                                                    }
-                                                    onClick={() => {
-                                                        props.setRootNote(note());
-                                                        props.setChordName(chord.name);
-                                                    }}
-                                                >
-                                                    {chordDisplayName()}
-                                                </button>
-                                            );
-                                        }}
-                                    </For>
-                                </>
-                            )}
+    return (
+        <section class="chord-table">
+            <For each={chords}>
+                {(chord) => (
+                    <div class="chord-table__column">
+                        <For each={props.possibleChords[chord]}>
+                            {(stepIndex) => {
+                                const note = () =>
+                                    getNoteInScale(props.modus, props.tonic, stepIndex) %
+                                    OCTAVE_LENGTH;
+                                const noteName = () => getNoteBaseName(note());
+                                const chordDisplayName = () => noteName() + chord;
+                                const isActive = () =>
+                                    note() === props.rootNote && chord === props.chordName;
+
+                                return (
+                                    <div class="chord-button-container">
+                                        <button
+                                            classList={{
+                                                "chord-button": true,
+                                                active: isActive(),
+                                            }}
+                                            // onClick={() => {
+                                            //     props.setRootNote(note());
+                                            //     props.setChordName(chord.name);
+                                            // }}
+                                        >
+                                            {chordDisplayName()}
+                                        </button>
+                                        <button class="chord-button__add-to-sequence">
+                                            <div>
+                                                <Plus />
+                                            </div>
+                                        </button>
+                                    </div>
+                                );
+                            }}
                         </For>
-                        <div class="break"></div>
-                    </>
+                    </div>
                 )}
             </For>
         </section>

@@ -3,16 +3,16 @@ import { CHORD_INTERVALS, NOTES, OCTAVE_LENGTH } from "@lib/constants";
 /**
  * Get all the chords possible in the current scale
  * @param scaleName
- * @returns Array of sets of chords that can be built from each of the scale's steps
+ * @returns Object `{[chordName]: number[] (steps from which the chord can be built)}`
  */
-export function getPossibleChords(modusName: string): Array<Set<string>> {
-    const possibleChords: Array<Set<string>> = [];
+export function getPossibleChords(modusName: string): Record<string, number[]> {
+    const possibleChords: Record<string, number[]> = {};
 
     const scale = modusName;
-    for (let fromIndex = 0; fromIndex < scale.length; fromIndex += 1) {
-        const currentStepChords = new Set<string>();
+    for (const chord in CHORD_INTERVALS) {
+        const possibleSteps: number[] = [];
 
-        for (const chord in CHORD_INTERVALS) {
+        for (let fromIndex = 0; fromIndex < scale.length; fromIndex += 1) {
             let isFitting = true;
             let intervals = CHORD_INTERVALS[chord];
             let currentStepIndex = fromIndex;
@@ -31,11 +31,11 @@ export function getPossibleChords(modusName: string): Array<Set<string>> {
             }
 
             if (isFitting) {
-                currentStepChords.add(chord);
+                possibleSteps.push(fromIndex);
             }
         }
 
-        possibleChords.push(currentStepChords);
+        possibleChords[chord] = possibleSteps;
     }
 
     return possibleChords;

@@ -1,57 +1,46 @@
 .chord-table {
+    width: 100%;
     box-sizing: border-box;
 
     display: grid;
     row-gap: 0.25rem;
-    column-gap: 0.25rem;
-    grid-template-columns: repeat(7, 1fr);
-}
-
-.chord-table.rows-3 {
-    grid-template-columns: repeat(3, 1fr);
-}
-
-.chord-table.rows-4 {
-    grid-template-columns: repeat(4, 1fr);
-}
-
-.chord-table.rows-5 {
-    grid-template-columns: repeat(5, 1fr);
-}
-
-.chord-table.rows-6 {
-    grid-template-columns: repeat(6, 1fr);
-}
-
-.chord-table.rows-7 {
-    grid-template-columns: repeat(7, 1fr);
-}
-
-.chord-table.rows-8 {
-    grid-template-columns: repeat(8, 1fr);
-}
-
-.chord-table.rows-9 {
-    grid-template-columns: repeat(9, 1fr);
-}
-
-.chord-table.rows-10 {
-    grid-template-columns: repeat(10, 1fr);
-}
-
-.chord-table.rows-11 {
     grid-template-columns: repeat(11, 1fr);
 }
 
-.chord-table.rows-12 {
-    grid-template-columns: repeat(12, 1fr);
+.chord-table__column {
+    display: flex;
+    flex-direction: column;
+    gap:L 0.25rem;
+}
+
+.chord-button-container {
+    position: relative;
 }
 
 .chord-button {
     box-sizing: border-box;
     border: 1px solid black;
-    border-radius: 0;
-    padding: 0.5rem;
+    border-radius: 6px;
+    padding: 0.25rem;
+    height: 70px;
+    width: 70px;
+}
+
+.chord-button__add-to-sequence {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: none;
+    background: none;
+    display: none;
+    cursor: pointer;
+    margin: 2px;
+    padding: 2px;
+    border-radius: 8px;
+}
+
+.chord-button-container:hover .chord-button__add-to-sequence {
+    display: block;
 }
 
 .chord-button.active {

@@ -57,14 +57,15 @@ function App() {
     };
 
     createEffect(() => {
+        // TODO !!!!!!!
         setRootNote(tonic());
-        const possibleTonicChords = possibleChords()[0];
-        const chord = possibleTonicChords.has("")
-            ? ""
-            : possibleTonicChords.has("m")
-              ? "m"
-              : possibleTonicChords.values().next().value;
-        setChordName(chord);
+        // const possibleTonicChords = possibleChords()[0];
+        // const chord = possibleTonicChords.has("")
+        //     ? ""
+        //     : possibleTonicChords.has("m")
+        //       ? "m"
+        //       : possibleTonicChords.values().next().value;
+        setChordName("");
     });
 
     const [favoriteList, setFavoriteList] = createSignal<string[]>(
